@@ -1,0 +1,13 @@
+node_modules
+uploads/*
+!uploads/.gitkeep
+.env
+data/contact-submissions.json
+data/project-submissions.json
+data/work-with-us-submissions.json
+data/resume-submissions.json
+data/job-applications.json
+data/newsletter-subscribers.json
+data/newsletter-campaigns.json
+private/resumes/*
+!private/resumes/.gitkeep

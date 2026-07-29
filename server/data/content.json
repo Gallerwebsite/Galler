@@ -1,0 +1,762 @@
+{
+  "hero": {
+    "headingLine1": "AN END-TO-END ENGINEERING",
+    "headingLine2": "SOLUTIONS COMPANY",
+    "videoUrl": "/videos/home-video.mp4"
+  },
+  "about": {
+    "title": "ABOUT US",
+    "backgroundImage": "/uploads/image-1781845733925-713380943.jpg",
+    "paragraph1": "Galler is India's leading industrial solution provider in the field of Electronics and Software. Founded in 1995, At present, it has more than 450 employees and more than 4 subsidiaries with business covering PAN India.",
+    "paragraph2": "The company focuses on the design, research and development, production of mechanical & Electro - mechanical Smart devices. It is one of the enterprises in India that focuses on the R&D of industrial electronics products. Rooted in care technology and focused on innovative applications in the industry, Galler provides customized solutions in retail, finance, petroleum, manufacturing, transportation and other industries.",
+    "stats": [
+      {
+        "value": "200+",
+        "label": "Team Members"
+      },
+      {
+        "value": "100K",
+        "label": "Devices Deployed"
+      },
+      {
+        "value": "12+",
+        "label": "Happy Clients"
+      },
+      {
+        "value": "10+",
+        "label": "Industries Worked"
+      }
+    ],
+    "ctaText": "KNOW MORE"
+  },
+  "stats": {
+    "clients": {
+      "label": "MANUFACT®",
+      "count": "100+",
+      "description": "Trusted by businesses across multiple manufacturing industries worldwide",
+      "rating": "4.9/5.0"
+    },
+    "experience": {
+      "period": "2005-2K26",
+      "count": "20+",
+      "description": "Delivering consistent manufacturing excellence since day one."
+    }
+  },
+  "footer": {
+    "newsletter": {
+      "heading": "Stay Connected",
+      "description": "Join our newsletter for tips, updates, and project highlights—only the good stuff."
+    },
+    "links": {
+      "column1": [
+        {
+          "label": "Home",
+          "href": "/"
+        },
+        {
+          "label": "About",
+          "href": "/about"
+        },
+        {
+          "label": "Careers",
+          "href": "/careers"
+        }
+      ],
+      "column2": [
+        {
+          "label": "Case Studies",
+          "href": "/case-studies"
+        },
+        {
+          "label": "Contact",
+          "href": "/contact"
+        },
+        {
+          "label": "Privacy Policy",
+          "href": "/privacy"
+        },
+        {
+          "label": "Error 404",
+          "href": "/404"
+        }
+      ]
+    },
+    "contact": {
+      "address": "1238 echo ridge blvd, suite 400, san francisco, CA 94103",
+      "phone": "+1 (415) 555-0167",
+      "email": "support@example.com"
+    },
+    "social": {
+      "instagram": "https://www.youtube.com/",
+      "linkedin": "https://www.youtube.com/",
+      "youtube": "https://www.youtube.com/"
+    }
+  },
+  "aboutPage": {
+    "hero": {
+      "tagline": "Who we are",
+      "heading": "About us",
+      "teamCount": "10+",
+      "teamLabel": "Team of passionate professionals",
+      "coordinates": "21.0278° N, 105.8342° E"
+    },
+    "banner": {
+      "description": "We are a team dedicated to precision engineering, delivering solutions that shape industries worldwide. Our journey is defined by trust, quality, and a commitment to excellence in every project.",
+      "teamButtonText": "Meet our team",
+      "brochureText": "Download brochure",
+      "scrollingText": "2005 SINCE —"
+    },
+    "journey": {
+      "tagline": "Our journey",
+      "heading": "Engineering trust and",
+      "headingHighlight": "quality",
+      "headingEnd": "through years of manufacturing experience",
+      "storyParagraph1": "We started with a vision to redefine manufacturing standards and provide solutions that industries can rely on. Over the years, we have grown into a team of skilled professionals equipped with cutting-edge technology, serving clients across diverse sectors and geographies.",
+      "storyParagraph2": "What drives us is not just producing components, but delivering value — ensuring every part we manufacture contributes to our client's success. Our commitment to quality, timely delivery, and innovation has helped us establish long-term partnerships with leading businesses worldwide.",
+      "founderName": "Michael Bennett",
+      "founderTitle": "Founder & CEO",
+      "capabilities": [
+        "Product assembly",
+        "Sheet metal fabrication",
+        "CNC machining services",
+        "Injection molding"
+      ]
+    },
+    "journeyTimeline": {
+      "heading": "JOURNEY",
+      "milestones": [
+        {
+          "year": "2022",
+          "description": "Exploring new avenues to provide creative and customized solutions across various industries."
+        },
+        {
+          "year": "2018-19",
+          "description": "Fuel Automation for Petroleum - Reliance BP Mobility Limited."
+        },
+        {
+          "year": "2015-16",
+          "description": "Telecom Infra networking & monitoring systems - Reliance Jio Infocomm Limited."
+        },
+        {
+          "year": "2012-13",
+          "description": "Electro Mechanical Solutions - Reliance Jio Infocomm Limited."
+        },
+        {
+          "year": "2010",
+          "description": "New milestone description"
+        }
+      ],
+      "backgroundImage": "/uploads/image-1782358010166-199771819.jpg"
+    },
+    "introSection": {
+      "title": "WE PUT OUR CLIENT'S REQUIREMENTS IN THE FOREFRONT.",
+      "paragraph1": "We at Galler thrive on innovation and pushing the bounds of technology to solve our customers' most pressing challenges. We combine designing, developing, and manufacturing to produce leading product solutions.",
+      "paragraph2": "Galler is a leading, end to end engineering solutions and product company. As a disruptive innovation company Galler navigates the business landscape via industry knowledge and digital capabilities."
+    },
+    "dimensions": {
+      "heading": "DIMENSIONS TO THOUGHTS",
+      "subtitle": "Transforming ideas into engineered solutions.",
+      "cards": [
+        {
+          "title": "FEASIBILITY STUDIES",
+          "description": "We examine the key technical challenges, key components of unit cost and then assess the likely impact of those technical challenges on meeting the product specification which helps in estimating & optimizing the project tasks and schedules to address uncertainties early in engineering development.",
+          "icon": "box"
+        },
+        {
+          "title": "METHOD ENGINEERING",
+          "description": "We help refining product requirements by eliciting additional content, distinguishing the imperative from the desirable, and alerting to the design impact of severe provisions. This helps in creating Technical Specifications to guide and track our engineering development of products.",
+          "icon": "forklift"
+        },
+        {
+          "title": "SHAPING CONCEPTS",
+          "description": "We shape your concepts by providing a technical vision of how a product idea can be made tangible in construction and performance, including materials, manufacturing processes and product requirements.",
+          "icon": "truck"
+        }
+      ]
+    },
+    "team": {
+      "heading": "OUR TEAM",
+      "subtitle": "Meet the people behind Galler.",
+      "members": [
+        {
+          "id": "1781846841946",
+          "name": "Vansh",
+          "photo": "/uploads/image-1781846846697-467188180.jpeg",
+          "linkedin": "https://www.youtube.com/",
+          "instagram": "https://www.youtube.com/",
+          "description": "Full Stack Developer"
+        },
+        {
+          "id": "1781846898215",
+          "name": "Vansh",
+          "photo": "/uploads/image-1781846907110-674323989.jpeg",
+          "linkedin": "https://www.youtube.com/",
+          "instagram": "https://www.youtube.com/",
+          "description": "Full Stack Developer"
+        },
+        {
+          "id": "1781846915663",
+          "name": "Vansh Agarwal",
+          "photo": "/uploads/image-1781846924562-325102154.jpeg",
+          "linkedin": "https://www.youtube.com/",
+          "instagram": "https://www.youtube.com/",
+          "description": "Dhoni made his international debut for the India national cricket team in 2004, and within a short period, he became one of the most dangerous wicketkeeper-batsmen in world cricket. His aggressive batting style, powerful finishing ability, and fearless approach made him a fan favorite. One of his early memorable innings was his explosive 148-run knock against Pakistan, which announced his arrival as a future star.\n\nAs captain, Dhoni led India into its most successful era in cricket history. Under his leadership, India won the inaugural ICC World Twenty20 in 2007, the historic 2011 Cricket World Cup in 2011, and the ICC Champions Trophy 2013 in 2013. He remains the only captain in cricket history to win all three major ICC white-ball trophies, proving his exceptional leadership and ability to perform under pressure."
+        },
+        {
+          "id": "1781846942163",
+          "name": "Vansh",
+          "photo": "/uploads/image-1781846949576-519499479.jpeg",
+          "linkedin": "https://www.youtube.com/",
+          "instagram": "https://www.youtube.com/",
+          "description": "Full Stack Developer"
+        }
+      ]
+    },
+    "achievements": {
+      "heading": "ACHIEVEMENTS",
+      "stats": [
+        {
+          "value": "450+",
+          "label": "Team Members",
+          "tone": "team",
+          "backgroundImage": "/uploads/image-1781845462642-468370417.jpg"
+        },
+        {
+          "value": "100K",
+          "label": "Devices Deployed",
+          "tone": "devices",
+          "backgroundImage": "/uploads/image-1781845493101-601943034.jpg"
+        },
+        {
+          "value": "50+",
+          "label": "Happy Clients",
+          "tone": "clients",
+          "backgroundImage": "/uploads/image-1781845556470-942839517.jpg"
+        },
+        {
+          "value": "6+",
+          "label": "Industries Worked",
+          "tone": "industries",
+          "backgroundImage": "/uploads/image-1781845560056-318154958.jpg"
+        }
+      ]
+    },
+    "requirement": {
+      "heading": "How can we meet your requirement?",
+      "submitText": "SUBMIT",
+      "backgroundImage": "/uploads/image-1781845859167-257173496.jpg"
+    }
+  },
+  "contactPage": {
+    "heading": "CONTACT US",
+    "description": "We are here to help. Whether you have a question about our products, need a technical consultation, or want to explore a partnership, our team is ready to assist you.",
+    "backgroundImage": "/uploads/image-1781847561726-119568680.jpg",
+    "phone1": "+91 120 456 7890",
+    "phone2": "8852019731",
+    "email": "info@gallerindia.com",
+    "email2": "sales@gallerindia.com",
+    "address1": "Plot No. 620, Sector 8 Rd, Sector 8, IMT Manesar, Gurugram, Haryana 122050, India",
+    "locationMapUrl": "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3504.0425895735393!2d77.3133869755499!3d28.5684837869862!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x390ce446cd69d94b%3A0x8c317ff6e20dc208!2sMicrosoft%20India%20(R%26D)%20Pvt.%20Ltd.%2C!5e0!3m2!1sen!2sin!4v1782724817064!5m2!1sen!2sin\" width=\"600\" height=\"450\" style=\"border:0;\" allowfullscreen=\"\" loading=\"lazy\" referrerpolicy=\"strict-origin-when-cross-origin",
+    "plants": [
+      {
+        "name": "PLANT 1 – NOIDA",
+        "address": "A-37, Sector 58, Noida, Uttar Pradesh – 201301, India"
+      },
+      {
+        "name": "PLANT 2 – GREATER NOIDA",
+        "address": "D-14, UPSIDC Industrial Area, Greater Noida, Uttar Pradesh – 201306, India"
+      },
+      {
+        "name": "PLANT 3 – DELHI",
+        "address": "Plot No. 12, Selakui Industrial Area, Dehradun, Uttarakhand – 248197, India",
+        "image": "/uploads/image-1781961293059-121793973.jpeg"
+      },
+      {
+        "name": "PLANT 4 – NEW LOCATION",
+        "address": "Enter plant address",
+        "image": ""
+      }
+    ],
+    "departments": [
+      {
+        "title": "SALES ENQUIRIES",
+        "description": "For product information and quotations",
+        "email": "sales@gallerindia.com",
+        "icon": "headset"
+      },
+      {
+        "title": "TECHNICAL SUPPORT",
+        "description": "For technical assistance and product support",
+        "email": "support@gallerindia.com",
+        "icon": "gear"
+      },
+      {
+        "title": "CAREERS",
+        "description": "Explore career opportunities with us",
+        "email": "careers@gallerindia.com",
+        "icon": "person"
+      }
+    ]
+  },
+  "projectsPage": {
+    "hero": {
+      "heading": "OUR PROJECTS",
+      "subtitle": "Select an industry below to explore our successfully implemented projects",
+      "ctaText": "START A PROJECT",
+      "backgroundImage": "/uploads/image-1782202275420-64479874.jpg"
+    }
+  },
+  "homeServices": {
+    "title": "OUR SERVICES",
+    "subtitle": "IOT-ENABLED INTEGRATED ELECTRONICS MANUFACTURING WITH END-TO-END CAPABILITIES ACROSS THE ESDM SPECTRUM",
+    "categories": [
+      {
+        "id": "design",
+        "number": 1,
+        "title": "DESIGN",
+        "icon": "design",
+        "items": [
+          "Concept to Design Proposal",
+          "Hardware, Embedded & Mechanical Design",
+          "Digital Engineering with IoT Solutions",
+          "DFM / DFT / DFS & Reliability Tests",
+          "Proof of Concept & Proto Build"
+        ]
+      },
+      {
+        "id": "manufacturing",
+        "number": 2,
+        "title": "MANUFACTURING",
+        "icon": "manufacturing",
+        "items": [
+          "Test Fixture & Functional Tester Development",
+          "Pilot Build & Ramp Up",
+          "OEM Turnkey Manufacturing — PCBA",
+          "OEM Turnkey Manufacturing — Box Build",
+          "Value Engineering & Part Localization"
+        ]
+      },
+      {
+        "id": "lifecycle",
+        "number": 3,
+        "title": "LIFECYCLE SUPPORT",
+        "icon": "lifecycle",
+        "items": [
+          "Obsolescence Management",
+          "Repair & Refurbish",
+          "Product Maintenance",
+          "Spare Parts Management incl. Last Time Buy",
+          "Post Warranty Servicing"
+        ]
+      }
+    ]
+  },
+  "homeWorkWithUs": {
+    "tagline": "GALLERINDIA",
+    "title": "Three ways to work with us",
+    "items": [
+      {
+        "id": "odm",
+        "number": "01",
+        "title": "ODM",
+        "icon": "odm",
+        "description": "You have a problem. Bring us the requirement, not the drawing. We define the specification, design the hardware, firmware and mechanics, build the tooling, prove it in the field, and manufacture it.",
+        "href": "/contact"
+      },
+      {
+        "id": "oem",
+        "number": "02",
+        "title": "OEM",
+        "icon": "oem",
+        "description": "You have a specification. Bring us your drawings and standards. We industrialise the design, build the tooling and test fixtures, and manufacture to your quality gates with full traceability.",
+        "href": "/contact"
+      },
+      {
+        "id": "reengineering",
+        "number": "03",
+        "title": "Re-engineering",
+        "icon": "reengineering",
+        "description": "You have a product. Bring us what already exists. We cut cost, replace end-of-life components, localise the BOM, add connectivity and diagnostics, and put it back into production.",
+        "href": "/contact"
+      }
+    ]
+  },
+  "homeCertificates": {
+    "tagline": "TRUST & ASSURANCE",
+    "title": "Certificates & Compliance",
+    "subtitle": "Click any certificate to view it in full size.",
+    "items": []
+  },
+  "homeIndustries": {
+    "title": "INDUSTRIES",
+    "watermarkWords": [],
+    "items": [
+      {
+        "id": "telecommunication",
+        "slug": "telecommunication",
+        "name": "TELECOMMUNICATION",
+        "image": "/uploads/image-1782203472294-182380804.jpg",
+        "products": [
+          {
+            "id": "access-control-locks",
+            "slug": "access-control-locks",
+            "name": "Access Control Locks",
+            "description": "Galler manufactures intelligent access control lock systems designed for telecom sites and secure facilities, enabling card-based authentication with real-time monitoring and unauthorized access prevention.",
+            "keyFeatures": [
+              "Enabling visitors or employees to access sites/doors via card",
+              "Preventing unauthorized access",
+              "Card-based authentication system",
+              "Real-time access monitoring",
+              "Enabling visitors or employees to access sites/doors via card",
+              "New feature"
+            ],
+            "image": "/uploads/image-1782569198779-822043936.jpeg",
+            "gallery": [
+              {
+                "id": "1782569214290",
+                "src": "/uploads/image-1782569219253-17949473.jpeg",
+                "type": "image"
+              },
+              {
+                "id": "1782569337907",
+                "src": "/uploads/image-1782569342112-845867061.png",
+                "type": "image"
+              },
+              {
+                "id": "1782569342840",
+                "src": "/uploads/image-1782569346851-694541452.jpeg",
+                "type": "image"
+              },
+              {
+                "id": "1782569351123",
+                "src": "/uploads/image-1782569355467-637005781.jpeg",
+                "type": "image"
+              },
+              {
+                "id": "1782569365773",
+                "src": "/uploads/image-1782569369965-443843019.webp",
+                "type": "image"
+              }
+            ],
+            "downloadButtons": {
+              "enabled": true,
+              "showBrochure": true,
+              "showModel3d": true,
+              "brochureUrl": "/uploads/file-1782570321176-107293908.docx",
+              "brochureFileName": "Document1 2.docx",
+              "model3dUrl": "/uploads/file-1782616161039-768379606.docx",
+              "model3dFileName": "Document1 2.docx"
+            }
+          },
+          {
+            "id": "outdoor-cabinet-locks",
+            "slug": "outdoor-cabinet-locks",
+            "name": "Outdoor Cabinet Locks",
+            "description": "Weatherproof, low-power locking solutions engineered for outdoor telecommunications cabinets, offering high durability and remote monitoring capabilities for field-deployed infrastructure.",
+            "keyFeatures": [
+              "Low power consumption locking solutions",
+              "Highly resistant and weatherproof",
+              "Designed for telecommunications cabinets",
+              "Remote monitoring capabilities"
+            ],
+            "image": "",
+            "gallery": []
+          },
+          {
+            "id": "remote-telemetric-unit",
+            "slug": "remote-telemetric-unit",
+            "name": "Remote Telemetric Unit",
+            "description": "An IoT-enabled telemetric unit for real-time data collection and transmission across telecom and utility applications, with multi-sensor integration and cloud connectivity.",
+            "keyFeatures": [
+              "IOT device for manifold utilities",
+              "Real-time data transmission",
+              "Multi-sensor integration",
+              "Cloud connectivity enabled"
+            ],
+            "image": "",
+            "gallery": []
+          },
+          {
+            "id": "dc-energy-meter",
+            "slug": "dc-energy-meter",
+            "name": "DC Energy Meter",
+            "description": "Multi-channel DC energy measurement device built to address telecom power monitoring challenges, with accurate logging, analytics, and remote configuration support.",
+            "keyFeatures": [
+              "Multi-channel DC energy measurement",
+              "Designed to overcome telecom challenges",
+              "Accurate and reliable monitoring",
+              "Data logging and analytics",
+              "Remote configuration support"
+            ],
+            "image": "",
+            "gallery": []
+          }
+        ]
+      },
+      {
+        "id": "petroleum",
+        "slug": "petroleum",
+        "name": "PETROLEUM",
+        "image": "/uploads/image-1782203291277-968558819.jpg",
+        "products": [
+          {
+            "id": "1782202593218",
+            "slug": "new-project",
+            "name": "New Project",
+            "description": "",
+            "keyFeatures": [
+              "hello",
+              "hello",
+              "hello"
+            ],
+            "image": "/uploads/image-1782202601678-645663077.jpg",
+            "gallery": []
+          }
+        ]
+      },
+      {
+        "id": "automobile",
+        "slug": "automobile",
+        "name": "AUTOMOBILE",
+        "image": "/uploads/image-1782203339109-855343167.jpg",
+        "products": []
+      },
+      {
+        "id": "1781957721209",
+        "slug": "testing",
+        "name": "Testing ",
+        "image": "/uploads/image-1781957737495-383665189.jpeg",
+        "products": []
+      }
+    ]
+  },
+  "marquee": {
+    "row1": [
+      {
+        "id": "bsnl",
+        "src": "/uploads/image-1781840282024-681374348.png",
+        "alt": "BSNL"
+      },
+      {
+        "id": "honda",
+        "src": "/uploads/image-1781840142908-438256195.png",
+        "alt": "honda"
+      },
+      {
+        "id": "lnt",
+        "src": "/uploads/image-1781840227713-565205793.png",
+        "alt": "LnT"
+      },
+      {
+        "id": "nokia",
+        "src": "/uploads/image-1781840511195-55365348.png",
+        "alt": "nokia"
+      },
+      {
+        "id": "reliance",
+        "src": "/uploads/image-1781840360804-100669641.png",
+        "alt": "skoda"
+      },
+      {
+        "id": "suzuki",
+        "src": "/uploads/image-1781840473898-114353554.png",
+        "alt": "suzuki"
+      },
+      {
+        "id": "toyota",
+        "src": "/uploads/image-1781840011263-211951225.png",
+        "alt": "toyota"
+      },
+      {
+        "id": "1781842801594",
+        "src": "/uploads/image-1781842811576-13356812.png",
+        "alt": "jio"
+      },
+      {
+        "id": "1781842952845",
+        "src": "/uploads/image-1781842962466-382136753.png",
+        "alt": "indus tower"
+      },
+      {
+        "id": "1781843406343",
+        "src": "/uploads/image-1781843413286-709731798.png",
+        "alt": "rittal"
+      }
+    ],
+    "row2": [
+      {
+        "id": "1781844336778",
+        "src": "/uploads/image-1781844345427-423444378.png",
+        "alt": "igl"
+      },
+      {
+        "id": "1781844415145",
+        "src": "/uploads/image-1781844434515-782851238.png",
+        "alt": "jio bp"
+      },
+      {
+        "id": "row2-1782723577585",
+        "src": "/uploads/image-1782723620860-114123516.png",
+        "alt": "exicom"
+      },
+      {
+        "id": "row2-1782723632349",
+        "src": "/uploads/image-1782723642034-596747715.png",
+        "alt": "scheinder"
+      },
+      {
+        "id": "row2-1782723645250",
+        "src": "/uploads/image-1782723671201-420693448.png",
+        "alt": "delta"
+      },
+      {
+        "id": "row2-1782723702584",
+        "src": "/uploads/image-1782723711887-194106796.png",
+        "alt": "skoda"
+      },
+      {
+        "id": "row2-1782723714601",
+        "src": "/uploads/image-1782723740912-697764588.png",
+        "alt": "cerence"
+      }
+    ]
+  },
+  "careersPage": {
+    "hero": {
+      "headingLine1": "BUILD PRODUCTS.",
+      "headingLine2": "SOLVE REAL PROBLEMS.",
+      "headingLine3": "CREATE IMPACT.",
+      "description": "At Galler, we engineer innovative solutions that power industries across Telecom, Petroleum, Defense, Automotive, Industrial Automation, Energy and Emerging Technologies.",
+      "viewPositionsText": "VIEW OPEN POSITIONS",
+      "submitResumeText": "SUBMIT YOUR RESUME",
+      "image": "/uploads/image-1781875504393-436989349.png"
+    },
+    "whyWork": {
+      "heading": "WHY WORK AT GALLER?",
+      "benefits": [
+        {
+          "title": "MEANINGFUL WORK",
+          "description": "Work on products and solutions used by leading organizations.",
+          "icon": "meaningful"
+        },
+        {
+          "title": "LEARN & GROW",
+          "description": "Learn from experienced engineers and industry experts.",
+          "icon": "learn"
+        },
+        {
+          "title": "DIVERSE EXPOSURE",
+          "description": "Exposure to multiple industries and cutting-edge technologies.",
+          "icon": "diverse"
+        },
+        {
+          "title": "OWNERSHIP",
+          "description": "Take responsibility, drive innovation and see your ideas grow.",
+          "icon": "ownership"
+        },
+        {
+          "title": "CONTINUOUS GROWTH",
+          "description": "Opportunities to build expertise and advance your career.",
+          "icon": "growth"
+        },
+        {
+          "title": "LONG-TERM CAREER",
+          "description": "A place to build a career with purpose and stability.",
+          "icon": "career"
+        }
+      ]
+    },
+    "lifeAtGaller": {
+      "heading": "LIFE AT GALLER",
+      "subtitle": "A culture of collaboration, innovation and excellence.",
+      "images": [
+        {
+          "id": "1",
+          "src": "/uploads/image-1781956460555-2438085.jpeg",
+          "label": "Product Development"
+        },
+        {
+          "id": "2",
+          "src": "/uploads/image-1781956564229-2044818.jpeg",
+          "label": "Engineering Reviews"
+        },
+        {
+          "id": "3",
+          "src": "/uploads/image-1781956567920-166021367.jpeg",
+          "label": "Manufacturing Operations"
+        },
+        {
+          "id": "4",
+          "src": "/uploads/image-1781956572628-578165739.jpeg",
+          "label": "Field Deployments"
+        },
+        {
+          "id": "5",
+          "src": "/uploads/image-1781956576468-601412076.jpeg",
+          "label": "Trade Shows"
+        },
+        {
+          "id": "6",
+          "src": "/uploads/image-1781956581170-348199526.jpeg",
+          "label": "Team Celebrations"
+        }
+      ]
+    },
+    "openingsSidebar": {
+      "ctaHeading": "DON'T SEE A SUITABLE ROLE?",
+      "ctaParagraph1": "We are always looking for talented and passionate individuals.",
+      "ctaParagraph2": "Submit your profile and we'll contact you when a suitable opportunity becomes available.",
+      "ctaButtonText": "SUBMIT GENERAL RESUME",
+      "networkHeading": "JOIN OUR TALENT NETWORK",
+      "networkDescription": "Stay updated with our latest job openings and career opportunities."
+    },
+    "hiringProcess": {
+      "heading": "OUR HIRING PROCESS",
+      "steps": [
+        {
+          "number": 1,
+          "title": "STEP 1",
+          "subtitle": "Application",
+          "icon": "application"
+        },
+        {
+          "number": 2,
+          "title": "STEP 2",
+          "subtitle": "Resume Review",
+          "icon": "review"
+        },
+        {
+          "number": 3,
+          "title": "STEP 3",
+          "subtitle": "Technical Evaluation",
+          "icon": "technical"
+        },
+        {
+          "number": 4,
+          "title": "STEP 4",
+          "subtitle": "Interview Process",
+          "icon": "interview"
+        },
+        {
+          "number": 5,
+          "title": "STEP 5",
+          "subtitle": "Offer & Documentation",
+          "icon": "offer"
+        },
+        {
+          "number": 6,
+          "title": "STEP 6",
+          "subtitle": "Welcome to Galler",
+          "icon": "welcome"
+        }
+      ],
+      "contactBanner": {
+        "heading": "HAVE QUESTIONS?",
+        "description": "Reach out to our recruitment team.",
+        "email": "Vansh@gmail.com",
+        "phone": "+91 8852019731",
+        "buttonText": "CONTACT RECRUITMENT TEAM"
+      }
+    }
+  }
+}

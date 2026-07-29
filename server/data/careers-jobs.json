@@ -1,0 +1,87 @@
+[
+  {
+    "id": "9c699e05-7492-4650-8df2-8f228bcbb2a1",
+    "title": "Call Center",
+    "descriptionPoints": [
+      "Work as our support manager",
+      "Handle inbound customer calls and resolve queries professionally",
+      "Coordinate with internal teams to escalate and track issues",
+      "Maintain accurate call logs and follow-up records"
+    ],
+    "location": "Noida",
+    "experience": "Freshers",
+    "type": "Full Time",
+    "category": "support",
+    "department": "Support"
+  },
+  {
+    "id": "1",
+    "title": "Electronics Design Engineer",
+    "descriptionPoints": [
+      "Design and develop innovative electronic products and solutions for industrial and telecom applications",
+      "Create schematics, PCB layouts, and design documentation",
+      "Collaborate with cross-functional teams on product validation and testing",
+      "Support manufacturing and field teams during product rollout"
+    ],
+    "location": "Noida",
+    "experience": "2-5 Years",
+    "type": "Full Time",
+    "category": "engineering"
+  },
+  {
+    "id": "2",
+    "title": "Embedded Systems Engineer",
+    "descriptionPoints": [
+      "Develop firmware, communication protocols and embedded software solutions",
+      "Work on RTOS-based systems and device drivers",
+      "Debug hardware-software integration issues on the bench and in the field",
+      "Document firmware architecture and release notes"
+    ],
+    "location": "Noida",
+    "experience": "3-6 Years",
+    "type": "Full Time",
+    "category": "engineering"
+  },
+  {
+    "id": "3",
+    "title": "Mechanical Design Engineer",
+    "descriptionPoints": [
+      "Design enclosures, mechanical assemblies and industrial products",
+      "Prepare 3D models, drawings, and BOMs for production",
+      "Perform tolerance analysis and design-for-manufacturing reviews",
+      "Support prototyping and validation of mechanical components"
+    ],
+    "location": "Noida",
+    "experience": "2-5 Years",
+    "type": "Full Time",
+    "category": "engineering"
+  },
+  {
+    "id": "4",
+    "title": "Sales Manager - Telecom",
+    "descriptionPoints": [
+      "Drive business growth within telecom and infrastructure sectors",
+      "Build and manage relationships with key enterprise accounts",
+      "Prepare proposals, pricing, and commercial presentations",
+      "Coordinate with technical teams to deliver customer solutions"
+    ],
+    "location": "Delhi NCR",
+    "experience": "5+ Years",
+    "type": "Full Time",
+    "category": "sales"
+  },
+  {
+    "id": "5",
+    "title": "Project Coordinator",
+    "descriptionPoints": [
+      "Support project execution, planning, scheduling and customer coordination",
+      "Track milestones, deliverables, and resource allocation",
+      "Prepare status reports and facilitate stakeholder meetings",
+      "Ensure timely communication between clients and internal teams"
+    ],
+    "location": "Noida",
+    "experience": "2-4 Years",
+    "type": "Full Time",
+    "category": "operations"
+  }
+]
