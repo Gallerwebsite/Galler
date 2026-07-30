@@ -67,7 +67,7 @@ function IndustryCard({ item }: { item: IndustryItem }) {
 
   return (
     <Link href={href} className="block h-full">
-      <article className="group relative aspect-[8/5] h-full overflow-hidden bg-[#d8d8d8] sm:aspect-[3/2]">
+      <article className="group relative aspect-[4/3] h-full overflow-hidden bg-[#d8d8d8] sm:aspect-[5/4]">
         {imageSrc ? (
           // eslint-disable-next-line @next/next/no-img-element
           <img
