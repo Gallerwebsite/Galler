@@ -378,7 +378,6 @@ Middleware requires auth cookie for `/admin/*` except login. Admin layout is noi
 ### Ops
 
 - [x] Health endpoint
-- [x] Keep-alive cron (`/api/cron/keep-alive`) for hosted API
 
 ---
 
@@ -392,9 +391,8 @@ Middleware requires auth cookie for `/admin/*` except login. Admin layout is noi
 | `POST /api/upload/image` | Proxy image upload |
 | `POST /api/upload/video` | Proxy video upload |
 | `POST /api/upload/document` | Proxy document upload |
-| `GET /api/cron/keep-alive` | Ping backend health |
 
-Rewrite: `/api-backend/:path*` → `NEXT_PUBLIC_API_URL`.
+Proxy route: `/api-backend/:path*` → `NEXT_PUBLIC_API_URL` (`app/api-backend/[...path]`).
 
 ### Express backend (`server/`, typically port **5001**)
 
@@ -427,7 +425,7 @@ Galler/
 │   ├── admin/                # CMS login + dashboard
 │   ├── industries/           # Legacy redirects → /projects
 │   ├── components/           # UI by area (home, about, contact, …)
-│   ├── api/                  # Next proxies / cron
+│   ├── api/                  # Next proxies
 │   ├── lib/                  # Content helpers, auth, downloads
 │   ├── globals.css           # Tokens, fonts, animations
 │   └── layout.tsx
