@@ -18,16 +18,3 @@ services:
         sync: false
       - key: CLOUDINARY_API_SECRET
         sync: false
-
-  # Pings the API every 5 minutes so the free Render instance stays awake.
-  # Lives in this repo — no GitHub Actions required.
-  - type: cron
-    name: galler-keep-alive
-    runtime: node
-    rootDir: server
-    schedule: "*/5 * * * *"
-    buildCommand: npm install --omit=dev
-    startCommand: node scripts/keep-alive.js
-    envVars:
-      - key: KEEP_ALIVE_URL
-        value: https://galler-lokb.onrender.com/api/health
