@@ -26,9 +26,9 @@ app.set('trust proxy', 1);
 
 const allowedOrigins = [
   process.env.FRONTEND_URL,
-  ...(process.env.NODE_ENV !== 'production'
-    ? ['http://localhost:3000', 'http://127.0.0.1:3000']
-    : []),
+  // Always allow local Next so admin can hit the Render API from localhost.
+  'http://localhost:3000',
+  'http://127.0.0.1:3000',
 ].filter(Boolean);
 
 app.use(cors({
@@ -37,7 +37,8 @@ app.use(cors({
       callback(null, true);
       return;
     }
-    callback(new Error('Not allowed by CORS'));
+    // Reject without throwing — a thrown Error becomes an HTML 500.
+    callback(null, false);
   },
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
   allowedHeaders: ['Content-Type', 'Authorization'],

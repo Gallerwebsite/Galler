@@ -392,7 +392,7 @@ Middleware requires auth cookie for `/admin/*` except login. Admin layout is noi
 | `POST /api/upload/video` | Proxy video upload |
 | `POST /api/upload/document` | Proxy document upload |
 
-Rewrite: `/api-backend/:path*` → `NEXT_PUBLIC_API_URL`.
+Proxy route: `/api-backend/:path*` → `NEXT_PUBLIC_API_URL` (`app/api-backend/[...path]`).
 
 ### Express backend (`server/`, typically port **5001**)
 

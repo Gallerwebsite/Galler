@@ -43,14 +43,6 @@ const nextConfig: NextConfig = {
   experimental: {
     proxyClientMaxBodySize: "100mb",
   },
-  async rewrites() {
-    return [
-      {
-        source: "/api-backend/:path*",
-        destination: `${apiUrl}/:path*`,
-      },
-    ];
-  },
   async headers() {
     const apiHost = uploadHost !== "localhost" ? uploadHost : "localhost";
     const apiProtocol = uploadProtocol;
