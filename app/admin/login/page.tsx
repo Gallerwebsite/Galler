@@ -1,7 +1,7 @@
 "use client";
 
 import { Suspense, useState } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 
 import { adminFetch } from "@/app/lib/adminApi";
@@ -14,7 +14,6 @@ function safeAdminRedirect(path: string | null): string {
 }
 
 function AdminLoginForm() {
-  const router = useRouter();
   const searchParams = useSearchParams();
   const redirectTo = safeAdminRedirect(searchParams.get("redirect"));
   const [email, setEmail] = useState("");
@@ -50,8 +49,7 @@ function AdminLoginForm() {
         return;
       }
 
-      router.push(redirectTo);
-      router.refresh();
+      window.location.href = redirectTo;
     } catch {
       setError("Unable to connect to server. Make sure the backend is running.");
     }
