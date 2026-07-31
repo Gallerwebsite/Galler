@@ -6,7 +6,8 @@ export const dynamic = "force-dynamic";
 
 /**
  * Lightweight keep-alive: pings the Render API health endpoint.
- * Intended for Vercel Cron (Pro) or any external scheduler.
+ * Primary scheduler is the Render cron in render.yaml (every 5 mins).
+ * This route remains available for manual checks or Vercel Cron (Pro).
  */
 export async function GET(request: Request) {
   const authHeader = request.headers.get("authorization");
