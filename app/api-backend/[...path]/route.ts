@@ -19,6 +19,7 @@ const HOP_BY_HOP = new Set([
   "upgrade",
   "host",
   "content-length",
+  "content-encoding",
 ]);
 
 function buildUpstreamUrl(pathSegments: string[], search: string) {
