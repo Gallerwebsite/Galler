@@ -7,6 +7,7 @@ import {
   type Variants,
 } from "framer-motion";
 
+
 import { cn } from "@/app/lib/utils";
 
 type AnimationType = "text" | "word" | "character" | "line";
