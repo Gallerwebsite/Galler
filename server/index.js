@@ -24,23 +24,40 @@ const PORT = process.env.PORT || 5001;
 
 app.set('trust proxy', 1);
 
-const allowedOrigins = [
-  process.env.FRONTEND_URL,
-  // Always allow local Next so admin can hit the Render API from localhost.
-  'http://localhost:3000',
-  'http://127.0.0.1:3000',
-].filter(Boolean);
+function normalizeOrigin(value) {
+  if (!value || typeof value !== 'string') return null;
+  try {
+    return new URL(value.trim()).origin;
+  } catch {
+    return null;
+  }
+}
+
+// Admin uploads POST directly to this API from the browser (bypasses Vercel body limits),
+// so production site origins must always be allowed — not only whatever FRONTEND_URL is set to.
+const allowedOrigins = new Set(
+  [
+    process.env.FRONTEND_URL,
+    ...(process.env.FRONTEND_URLS || '').split(','),
+    'http://localhost:3000',
+    'http://127.0.0.1:3000',
+    'https://gallerindia.com',
+    'https://www.gallerindia.com',
+  ]
+    .map(normalizeOrigin)
+    .filter(Boolean)
+);
 
 app.use(cors({
   origin(origin, callback) {
-    if (!origin || allowedOrigins.includes(origin)) {
+    if (!origin || allowedOrigins.has(origin)) {
       callback(null, true);
       return;
     }
     // Reject without throwing — a thrown Error becomes an HTML 500.
     callback(null, false);
   },
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization'],
   credentials: true,
 }));
