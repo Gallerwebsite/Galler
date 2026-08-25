@@ -54,14 +54,18 @@ function getPlantMapUrl(plant: Plant): string | null {
   return null;
 }
 
+const MAP_HEIGHT_CLASS = "h-[320px] sm:h-[380px]";
+
 export default function ContactLocations({
   plants = DEFAULT_PLANTS,
   locationMapUrl = DEFAULT_MAP_EMBED_URL 
 }: ContactLocationsProps) {
+  const shouldScrollPlants = plants.length > 4;
+
   return (
     <section className="bg-white py-14 sm:py-16">
       <div className="mx-auto grid max-w-7xl grid-cols-1 gap-12 px-6 lg:grid-cols-2 lg:gap-14 lg:px-10">
-        <div>
+        <div className="flex min-h-0 flex-col">
           <motion.h2
             className="font-cinzel text-[30px] font-normal leading-[1.08] tracking-tight text-[#000]"
             initial={{ opacity: 0, y: -40 }}
@@ -72,7 +76,7 @@ export default function ContactLocations({
             OUR LOCATION
           </motion.h2>
           <motion.div
-            className="mt-8 overflow-hidden rounded-sm border border-[#e5e5e5] shadow-sm"
+            className={`mt-8 overflow-hidden rounded-sm border border-[#e5e5e5] shadow-sm ${MAP_HEIGHT_CLASS}`}
             initial={{ opacity: 0, y: 40 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={viewport}
@@ -81,7 +85,7 @@ export default function ContactLocations({
             <iframe
               title="Galler India Pvt. Ltd. location"
               src={locationMapUrl}
-              className="h-[320px] w-full border-0 sm:h-[380px]"
+              className="h-full w-full border-0"
               loading="lazy"
               referrerPolicy="no-referrer-when-downgrade"
               allowFullScreen
@@ -89,7 +93,7 @@ export default function ContactLocations({
           </motion.div>
         </div>
 
-        <div>
+        <div className="flex min-h-0 flex-col">
           <motion.h2
             className="font-cinzel text-[30px] font-normal leading-[1.08] tracking-tight text-[#000]"
             initial={{ opacity: 0, y: -40 }}
@@ -99,14 +103,26 @@ export default function ContactLocations({
           >
             OUR PLANTS
           </motion.h2>
-          <ul className="mt-8 space-y-6">
+          <ul
+            className={`mt-8 ${MAP_HEIGHT_CLASS} ${
+              shouldScrollPlants
+                ? "space-y-6 overflow-y-auto pr-2"
+                : "flex flex-col gap-3"
+            }`}
+          >
             {plants.map((plant, index) => {
               const imageSrc = plant.image ? resolveUploadSrc(plant.image) : aboutBanner.src;
               const mapUrl = getPlantMapUrl(plant);
 
               const content = (
                 <>
-                  <div className="h-20 w-28 shrink-0 overflow-hidden rounded-sm border border-[#e5e5e5]">
+                  <div
+                    className={`shrink-0 overflow-hidden rounded-sm border border-[#e5e5e5] ${
+                      shouldScrollPlants
+                        ? "h-20 w-28"
+                        : "h-full min-h-20 w-28 self-stretch sm:w-32"
+                    }`}
+                  >
                     {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img
                       src={imageSrc}
@@ -114,7 +130,7 @@ export default function ContactLocations({
                       className="h-full w-full object-cover object-center"
                     />
                   </div>
-                  <div className="min-w-0 pt-1">
+                  <div className="min-w-0">
                     <p className="font-century text-[15px] font-bold text-[#0b1f4a] transition-colors group-hover:text-[#b8451a]">{plant.name}</p>
                     <p className="mt-1.5 font-century text-[15px] leading-relaxed text-[#4a4a4a]">
                       {plant.address}
@@ -123,9 +139,14 @@ export default function ContactLocations({
                 </>
               );
 
+              const rowClass = shouldScrollPlants
+                ? "group flex gap-4 rounded-sm p-1 -m-1 transition-colors hover:bg-[#f8f8f8]"
+                : "group flex h-full items-center gap-4 rounded-sm px-3 py-2 transition-colors hover:bg-[#f8f8f8]";
+
               return (
                 <motion.li
                   key={`${plant.name}-${index}`}
+                  className={shouldScrollPlants ? undefined : "min-h-0 flex-1"}
                   initial={{ opacity: 0, x: -40 }}
                   whileInView={{ opacity: 1, x: 0 }}
                   viewport={viewport}
@@ -140,13 +161,13 @@ export default function ContactLocations({
                       href={mapUrl}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="group flex cursor-pointer gap-4 rounded-sm p-1 -m-1 transition-colors hover:bg-[#f8f8f8]"
+                      className={`${rowClass} cursor-pointer`}
                       aria-label={`Open ${plant.name} in Google Maps`}
                     >
                       {content}
                     </a>
                   ) : (
-                    <div className="flex gap-4">{content}</div>
+                    <div className={rowClass}>{content}</div>
                   )}
                 </motion.li>
               );

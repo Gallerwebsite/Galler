@@ -5,7 +5,9 @@ const os = require('os');
 const path = require('path');
 const { body, validationResult } = require('express-validator');
 const authMiddleware = require('../middleware/auth');
+const mediaStorage = require('../utils/mediaStorage');
 const cloudinaryUtil = require('../utils/cloudinary');
+const imagekitUtil = require('../utils/imagekit');
 
 const router = express.Router();
 
@@ -78,11 +80,11 @@ const MAX_IMAGE_SIZE = 10 * 1024 * 1024;
 const MAX_DOCUMENT_SIZE = 100 * 1024 * 1024;
 
 function getImageStorage() {
-  return cloudinaryUtil.isConfigured() ? memoryStorage : diskStorage;
+  return mediaStorage.isConfigured() ? memoryStorage : diskStorage;
 }
 
 function getLargeFileStorage() {
-  return cloudinaryUtil.isConfigured() ? tempDiskStorage : diskStorage;
+  return mediaStorage.isConfigured() ? tempDiskStorage : diskStorage;
 }
 
 const uploadImage = multer({
@@ -104,7 +106,7 @@ const uploadDocument = multer({
 });
 
 async function resolveUploadedFile(file, resourceType = 'auto') {
-  if (cloudinaryUtil.isConfigured()) {
+  if (mediaStorage.isConfigured()) {
     const uploadOptions = {
       folder: 'galler/uploads',
       resourceType,
@@ -112,24 +114,24 @@ async function resolveUploadedFile(file, resourceType = 'auto') {
 
     if (file.path) {
       try {
-        const result = await cloudinaryUtil.uploadFromPath(
+        const result = await mediaStorage.uploadFromPath(
           file.path,
           file.originalname,
           uploadOptions
         );
         return {
-          url: result.secure_url,
+          url: result.secure_url || result.url,
           fileName: file.originalname,
         };
       } finally {
-        await cloudinaryUtil.removeLocalFile(file.path);
+        await mediaStorage.removeLocalFile(file.path);
       }
     }
 
     if (file.buffer) {
-      const result = await cloudinaryUtil.uploadMedia(file.buffer, file.originalname, uploadOptions);
+      const result = await mediaStorage.uploadMedia(file.buffer, file.originalname, uploadOptions);
       return {
-        url: result.secure_url,
+        url: result.secure_url || result.url,
         fileName: file.originalname,
       };
     }
@@ -168,7 +170,7 @@ function handleUpload(multerMiddleware, { fieldName, resourceType = 'auto' } = {
           fileName: uploaded.fileName,
         });
       } catch (uploadErr) {
-        console.error('Cloudinary upload failed:', uploadErr.message || uploadErr);
+        console.error('Media upload failed:', uploadErr.message || uploadErr);
         res.status(500).json({ message: 'Upload failed. Please try again.' });
       }
     });
@@ -192,6 +194,7 @@ router.delete(
       .custom((value) => {
         if (value.startsWith('/uploads/')) return true;
         if (cloudinaryUtil.isCloudinaryUrl(value)) return true;
+        if (imagekitUtil.isImageKitUrl(value)) return true;
         throw new Error('Invalid file URL format');
       }),
   ],
@@ -207,8 +210,8 @@ router.delete(
     const { url } = req.body;
 
     try {
-      if (cloudinaryUtil.isCloudinaryUrl(url)) {
-        await cloudinaryUtil.deleteByUrl(url);
+      if (mediaStorage.isManagedUrl(url)) {
+        await mediaStorage.deleteByUrl(url);
         return res.json({ message: 'File deleted successfully' });
       }
 

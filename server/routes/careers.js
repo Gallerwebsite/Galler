@@ -4,7 +4,7 @@ const fs = require('fs');
 const path = require('path');
 const multer = require('multer');
 const { readJSON, writeJSON } = require('../utils/dataStore');
-const cloudinaryUtil = require('../utils/cloudinary');
+const mediaStorage = require('../utils/mediaStorage');
 const authMiddleware = require('../middleware/auth');
 
 const router = express.Router();
@@ -27,7 +27,7 @@ const diskStorage = multer.diskStorage({
 });
 
 const uploadResume = multer({
-  storage: cloudinaryUtil.isConfigured() ? multer.memoryStorage() : diskStorage,
+  storage: mediaStorage.isConfigured() ? multer.memoryStorage() : diskStorage,
   fileFilter: (_req, file, cb) => {
     const allowedTypes = [
       'application/pdf',
@@ -150,13 +150,13 @@ async function cleanupUploadedFile(file) {
 }
 
 async function buildResumeFields(file) {
-  if (cloudinaryUtil.isConfigured()) {
-    const result = await cloudinaryUtil.uploadResume(file.buffer, file.originalname);
+  if (mediaStorage.isConfigured()) {
+    const result = await mediaStorage.uploadResume(file.buffer, file.originalname);
     return {
-      resumeFileName: result.public_id,
+      resumeFileName: result.fileId || result.public_id || result.name,
       resumeOriginalName: file.originalname,
       resumeSize: file.size,
-      resumeUrl: result.secure_url,
+      resumeUrl: result.secure_url || result.url,
     };
   }
 

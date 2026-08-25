@@ -87,7 +87,7 @@ function GalleryThumb({
     >
       {src ? (
         // eslint-disable-next-line @next/next/no-img-element
-        <img src={src} alt={item.alt || ""} className="h-full w-full object-cover" />
+        <img src={src} alt={item.alt || ""} className="h-full w-full object-contain p-2" />
       ) : (
         <div className="flex h-full w-full items-center justify-center bg-gray-100 font-century text-[13px] text-gray-400">
           No image

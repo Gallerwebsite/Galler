@@ -38,7 +38,7 @@ export default function ProductPreviewCard({
       >
         {image ? (
           <motion.div
-            className="aspect-[4/3] overflow-hidden bg-gray-100"
+            className="flex aspect-[4/3] items-center justify-center overflow-hidden bg-gray-50"
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={viewport}
@@ -48,7 +48,7 @@ export default function ProductPreviewCard({
             <img
               src={resolveUploadSrc(image)}
               alt={name}
-              className="h-full w-full object-cover transition-transform group-hover:scale-105"
+              className="h-full w-full object-contain p-4 transition-transform group-hover:scale-[1.03]"
             />
           </motion.div>
         ) : (
