@@ -1,7 +1,6 @@
 /**
  * Media storage facade.
- * Prefer ImageKit when configured (local ImageKit testing / future prod).
- * Fall back to Cloudinary, then local disk uploads.
+ * Prefer ImageKit when configured; fall back to Cloudinary, then local disk.
  */
 const path = require('path');
 const cloudinaryUtil = require('./cloudinary');

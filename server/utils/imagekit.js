@@ -85,46 +85,110 @@ async function removeLocalFile(filePath) {
   await fs.promises.unlink(filePath).catch(() => {});
 }
 
-function getFilePathFromUrl(url) {
-  const endpoint = (process.env.IMAGEKIT_URL_ENDPOINT || '').replace(/\/$/, '');
-  if (endpoint && url.startsWith(endpoint)) {
-    return url.slice(endpoint.length) || '/';
-  }
+function normalizeMediaUrl(url) {
   try {
-    const { pathname } = new URL(url);
-    const parts = pathname.split('/').filter(Boolean);
-    // /{imagekitId}/path/to/file → drop imagekit id
-    if (parts.length >= 2) return `/${parts.slice(1).join('/')}`;
-    return pathname;
+    const parsed = new URL(url);
+    parsed.search = '';
+    parsed.hash = '';
+    return parsed.toString().replace(/\/$/, '');
   } catch {
-    return null;
+    return String(url || '').split('?')[0].split('#')[0];
   }
+}
+
+function getFilePathFromUrl(url) {
+  const cleanUrl = normalizeMediaUrl(url);
+  const endpoint = (process.env.IMAGEKIT_URL_ENDPOINT || '').replace(/\/$/, '');
+  let pathname = '';
+
+  if (endpoint && cleanUrl.startsWith(endpoint)) {
+    pathname = cleanUrl.slice(endpoint.length) || '/';
+  } else {
+    try {
+      const parts = new URL(cleanUrl).pathname.split('/').filter(Boolean);
+      // /{imagekitId}/path/to/file → drop imagekit id
+      pathname = parts.length >= 2 ? `/${parts.slice(1).join('/')}` : `/${parts.join('/')}`;
+    } catch {
+      return null;
+    }
+  }
+
+  try {
+    pathname = decodeURIComponent(pathname);
+  } catch {
+    // keep encoded path if decode fails
+  }
+
+  if (!pathname.startsWith('/')) pathname = `/${pathname}`;
+  return pathname || null;
+}
+
+function pathsMatch(a, b) {
+  if (!a || !b) return false;
+  const left = a.startsWith('/') ? a : `/${a}`;
+  const right = b.startsWith('/') ? b : `/${b}`;
+  return left === right;
+}
+
+async function findImageKitFile(url) {
+  const imagekit = getClient();
+  const cleanUrl = normalizeMediaUrl(url);
+  const filePath = getFilePathFromUrl(cleanUrl);
+  const fileName = filePath ? path.posix.basename(filePath) : path.basename(cleanUrl);
+  const folder = filePath ? path.posix.dirname(filePath).replace(/^\//, '') : '';
+
+  const pickMatch = (listed) => {
+    const files = listed || [];
+    return (
+      files.find((file) => normalizeMediaUrl(file.url || '') === cleanUrl) ||
+      files.find((file) => pathsMatch(file.filePath, filePath)) ||
+      files.find((file) => file.name === fileName && pathsMatch(file.filePath, filePath)) ||
+      null
+    );
+  };
+
+  // 1) Prefer folder-scoped lookup (most accurate for nested galler/uploads paths)
+  if (folder && folder !== '.') {
+    const inFolder = await imagekit.listFiles({
+      path: folder,
+      searchQuery: `name="${fileName}"`,
+      limit: 20,
+    });
+    const match = pickMatch(inFolder);
+    if (match?.fileId) return match;
+  }
+
+  // 2) Global name search
+  const byName = await imagekit.listFiles({
+    searchQuery: `name="${fileName}"`,
+    limit: 50,
+  });
+  const nameMatch = pickMatch(byName);
+  if (nameMatch?.fileId) return nameMatch;
+
+  // 3) Last resort: same folder listing without searchQuery
+  if (folder && folder !== '.') {
+    const folderFiles = await imagekit.listFiles({
+      path: folder,
+      limit: 100,
+    });
+    const folderMatch = pickMatch(folderFiles);
+    if (folderMatch?.fileId) return folderMatch;
+  }
+
+  return null;
 }
 
 async function deleteByUrl(url) {
   if (!isImageKitUrl(url)) return false;
 
-  const imagekit = getClient();
-  const filePath = getFilePathFromUrl(url);
-  const fileName = filePath ? path.basename(filePath) : path.basename(url.split('?')[0]);
-
-  const listed = await imagekit.listFiles({
-    searchQuery: `name="${fileName}"`,
-    limit: 20,
-  });
-
-  const matches = (listed || []).filter((file) => {
-    if (file.url === url) return true;
-    if (filePath && file.filePath === filePath) return true;
-    return false;
-  });
-
-  const target = matches[0] || listed?.[0];
+  const target = await findImageKitFile(url);
+  // Already gone from ImageKit — treat as success so CMS clear still works
   if (!target?.fileId) {
-    throw new Error('ImageKit file not found for delete');
+    return true;
   }
 
-  await imagekit.deleteFile(target.fileId);
+  await getClient().deleteFile(target.fileId);
   return true;
 }
 

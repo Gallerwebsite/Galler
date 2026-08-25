@@ -260,7 +260,7 @@ export default function IndustryDetailContent({
               </motion.button>
             </motion.div>
 
-            {gallery.length > 0 ? (
+            {gallery.length > 1 ? (
               <motion.div
                 className="mt-4 flex items-center gap-2"
                 initial={{ opacity: 0, y: 30 }}

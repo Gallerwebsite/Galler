@@ -211,7 +211,12 @@ router.delete(
 
     try {
       if (mediaStorage.isManagedUrl(url)) {
-        await mediaStorage.deleteByUrl(url);
+        const deleted = await mediaStorage.deleteByUrl(url);
+        console.log(
+          `Media delete ${deleted ? 'ok' : 'skipped'}:`,
+          mediaStorage.isImageKitUrl(url) ? 'imagekit' : 'cloudinary',
+          url.slice(0, 120)
+        );
         return res.json({ message: 'File deleted successfully' });
       }
 
