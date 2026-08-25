@@ -737,7 +737,36 @@ export default function AdminDashboard() {
     );
   };
 
-  const uploadImage = async (file: File): Promise<string> => {
+  const isManagedMediaUrl = (url: string) =>
+    Boolean(url) &&
+    (url.startsWith("/uploads/") ||
+      url.startsWith("https://res.cloudinary.com/") ||
+      url.includes("ik.imagekit.io"));
+
+  /** Deletes a file from ImageKit/Cloudinary/local uploads. Returns false only on hard failure. */
+  const deleteManagedMedia = async (
+    url: string,
+    options: { alertOnError?: boolean } = {}
+  ): Promise<boolean> => {
+    if (!isManagedMediaUrl(url)) return true;
+
+    const res = await adminFetch("/api/upload", {
+      method: "DELETE",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ url }),
+    });
+
+    if (!res.ok) {
+      const data = (await res.json().catch(() => null)) as { message?: string } | null;
+      if (options.alertOnError !== false) {
+        alert(data?.message || "Failed to delete file from storage");
+      }
+      return false;
+    }
+    return true;
+  };
+
+  const uploadImage = async (file: File, replaceUrl?: string): Promise<string> => {
     const formData = new FormData();
     formData.append("image", file);
     const res = await adminUpload("/api/upload", formData);
@@ -749,10 +778,16 @@ export default function AdminDashboard() {
     if (!data?.url) {
       throw new Error("Upload failed — no file URL returned");
     }
+    if (replaceUrl && replaceUrl !== data.url) {
+      await deleteManagedMedia(replaceUrl, { alertOnError: false });
+    }
     return data.url;
   };
 
-  const uploadDocument = async (file: File): Promise<{ url: string; fileName: string }> => {
+  const uploadDocument = async (
+    file: File,
+    replaceUrl?: string
+  ): Promise<{ url: string; fileName: string }> => {
     const formData = new FormData();
     formData.append("file", file);
     const res = await adminUpload("/api/upload/document", formData);
@@ -767,6 +802,9 @@ export default function AdminDashboard() {
     }
     if (!data?.url) {
       throw new Error("Upload failed — no file URL returned");
+    }
+    if (replaceUrl && replaceUrl !== data.url) {
+      await deleteManagedMedia(replaceUrl, { alertOnError: false });
     }
     return { url: data.url, fileName: data.fileName || file.name };
   };
@@ -788,7 +826,7 @@ export default function AdminDashboard() {
     setContent((prev) => ({ ...prev, marquee: { row1, row2 } }));
   };
 
-  const uploadHeroVideo = async (file: File): Promise<string | null> => {
+  const uploadHeroVideo = async (file: File, replaceUrl?: string): Promise<string | null> => {
     const formData = new FormData();
     formData.append("video", file);
     const res = await adminUpload("/api/upload/video", formData);
@@ -798,25 +836,14 @@ export default function AdminDashboard() {
       return null;
     }
     const data = (await res.json()) as { url: string };
+    if (replaceUrl && replaceUrl !== data.url) {
+      await deleteManagedMedia(replaceUrl, { alertOnError: false });
+    }
     return data.url;
   };
 
   const deleteHeroVideo = async (url: string): Promise<boolean> => {
-    if (url.startsWith("/uploads/") || url.startsWith("https://res.cloudinary.com/") || url.includes("ik.imagekit.io")) {
-      const res = await adminFetch("/api/upload", {
-        method: "DELETE",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ url }),
-      });
-      if (!res.ok) {
-        const data = (await res.json().catch(() => null)) as { message?: string } | null;
-        alert(data?.message || "Failed to delete video file");
-        return false;
-      }
-    }
-
+    if (!(await deleteManagedMedia(url))) return false;
     updateField("hero", "videoUrl", "/videos/home-video.mp4");
     return true;
   };
@@ -862,14 +889,14 @@ export default function AdminDashboard() {
                   onChange={async (e) => {
                     const file = e.target.files?.[0];
                     if (!file) return;
-                    const url = await uploadHeroVideo(file);
+                    const url = await uploadHeroVideo(file, videoUrl);
                     if (!url) return;
                     updateField("hero", "videoUrl", url);
                     e.target.value = "";
                   }}
                 />
               </label>
-              {videoUrl.startsWith("/uploads/") && (
+              {isManagedMediaUrl(videoUrl) && (
                 <button
                   type="button"
                   title="Delete video"
@@ -1029,7 +1056,7 @@ export default function AdminDashboard() {
                         if (!file) return;
                         setUploadingMarqueeId(uploadKey);
                         try {
-                          const url = await uploadMarqueeLogo(file);
+                          const url = await uploadMarqueeLogo(file, logo.src);
                           const altFromFile = file.name.replace(/\.[^.]+$/, "").replace(/[-_]+/g, " ").trim() || "Client logo";
                           const nextRow = [...logos];
                           nextRow[i] = { ...nextRow[i], src: url, alt: altFromFile };
@@ -1054,6 +1081,7 @@ export default function AdminDashboard() {
                     type="button"
                     disabled={uploadingMarqueeId === uploadKey}
                     onClick={async () => {
+                      if (logo.src && !(await deleteManagedMedia(logo.src))) return;
                       const nextRow = logos.filter((_, idx) => idx !== i);
                       const nextRows: MarqueeRows = { row1, row2, [rowKey]: nextRow };
                       updateMarqueeRows(nextRows);
@@ -1486,7 +1514,12 @@ export default function AdminDashboard() {
                         </button>
                         <button
                           type="button"
-                          onClick={() => updateItems(items.filter((_, idx) => idx !== i))}
+                          onClick={async () => {
+                            if (item.image) await deleteManagedMedia(item.image, { alertOnError: false });
+                            const next = items.filter((_, idx) => idx !== i);
+                            updateItems(next);
+                            await persistCertificates(next);
+                          }}
                           className="text-xs font-medium text-red-500 hover:underline"
                         >
                           Remove
@@ -1523,7 +1556,7 @@ export default function AdminDashboard() {
                           if (!file) return;
                           setUploadingCertificateId(uploadKey);
                           try {
-                            const url = await uploadImage(file);
+                            const url = await uploadImage(file, item.image);
                             const next = [...items];
                             next[i] = { ...next[i], image: url };
                             updateItems(next);
@@ -1634,7 +1667,25 @@ export default function AdminDashboard() {
                       <h4 className="text-sm font-semibold text-[#1a1a1a]">{item.name || `Industry ${i + 1}`}</h4>
                       <button
                         type="button"
-                        onClick={() => updateItems(items.filter((_, idx) => idx !== i))}
+                        onClick={async () => {
+                          if (item.image) await deleteManagedMedia(item.image, { alertOnError: false });
+                          const products = (item.products as Array<Record<string, unknown>>) ?? [];
+                          for (const product of products) {
+                            if (typeof product.image === "string" && product.image) {
+                              await deleteManagedMedia(product.image, { alertOnError: false });
+                            }
+                            const gallery = (product.gallery as Array<{ src?: string }>) ?? [];
+                            for (const g of gallery) {
+                              if (g.src) await deleteManagedMedia(g.src, { alertOnError: false });
+                            }
+                            const downloads = (product.downloadButtons as Record<string, unknown>) ?? {};
+                            for (const key of ["brochureUrl", "model3dUrl"] as const) {
+                              const u = downloads[key];
+                              if (typeof u === "string" && u) await deleteManagedMedia(u, { alertOnError: false });
+                            }
+                          }
+                          updateItems(items.filter((_, idx) => idx !== i));
+                        }}
                         className="text-xs font-medium text-red-500 hover:underline"
                       >
                         Remove
@@ -1666,7 +1717,7 @@ export default function AdminDashboard() {
                             if (!file) return;
                             setUploadingIndustryIndex(i);
                             try {
-                              const url = await uploadImage(file);
+                              const url = await uploadImage(file, item.image);
                               updateItem({ image: url });
                             } catch (err) {
                               alert(err instanceof Error ? err.message : "Upload failed");
@@ -1681,7 +1732,10 @@ export default function AdminDashboard() {
                         <button
                           type="button"
                           disabled={uploadingIndustryIndex === i}
-                          onClick={() => updateItem({ image: "" })}
+                          onClick={async () => {
+                            if (item.image && !(await deleteManagedMedia(item.image))) return;
+                            updateItem({ image: "" });
+                          }}
                           className="rounded-lg border border-red-200 px-4 py-2 text-sm font-medium text-red-600 hover:bg-red-50 disabled:opacity-50"
                         >
                           Remove card image
@@ -1968,7 +2022,19 @@ export default function AdminDashboard() {
                   </div>
                   <button
                     type="button"
-                    onClick={() => updateProducts(products.filter((_, idx) => idx !== pi))}
+                    onClick={async () => {
+                      if (product.image) await deleteManagedMedia(product.image, { alertOnError: false });
+                      for (const g of gallery) {
+                        if (g.src) await deleteManagedMedia(g.src, { alertOnError: false });
+                      }
+                      if (downloadButtons.brochureUrl) {
+                        await deleteManagedMedia(downloadButtons.brochureUrl, { alertOnError: false });
+                      }
+                      if (downloadButtons.model3dUrl) {
+                        await deleteManagedMedia(downloadButtons.model3dUrl, { alertOnError: false });
+                      }
+                      updateProducts(products.filter((_, idx) => idx !== pi));
+                    }}
                     className="text-xs font-medium text-red-500 hover:underline"
                   >
                     Remove product
@@ -2017,7 +2083,7 @@ export default function AdminDashboard() {
                             if (!file) return;
                             setUploadingProductImageKey(imageUploadKey);
                             try {
-                              const url = await uploadImage(file);
+                              const url = await uploadImage(file, product.image);
                               updateProduct({ image: url });
                             } catch (err) {
                               alert(err instanceof Error ? err.message : "Upload failed");
@@ -2156,7 +2222,7 @@ export default function AdminDashboard() {
                                   const uploadKey = `${industryIndex}-${pi}-brochure`;
                                   setUploadingProductDocumentKey(uploadKey);
                                   try {
-                                    const uploaded = await uploadDocument(file);
+                                    const uploaded = await uploadDocument(file, downloadButtons.brochureUrl);
                                     updateDownloadButtons({
                                       brochureUrl: uploaded.url,
                                       brochureFileName: uploaded.fileName,
@@ -2173,12 +2239,13 @@ export default function AdminDashboard() {
                             {downloadButtons.brochureUrl ? (
                               <button
                                 type="button"
-                                onClick={() =>
+                                onClick={async () => {
+                                  if (!(await deleteManagedMedia(downloadButtons.brochureUrl || ""))) return;
                                   updateDownloadButtons({
                                     brochureUrl: "",
                                     brochureFileName: "",
-                                  })
-                                }
+                                  });
+                                }}
                                 className="rounded-lg border border-red-200 px-3 py-1.5 text-xs font-medium text-red-600 hover:bg-red-50"
                               >
                                 Remove file
@@ -2218,7 +2285,7 @@ export default function AdminDashboard() {
                                   const uploadKey = `${industryIndex}-${pi}-model3d`;
                                   setUploadingProductDocumentKey(uploadKey);
                                   try {
-                                    const uploaded = await uploadDocument(file);
+                                    const uploaded = await uploadDocument(file, downloadButtons.model3dUrl);
                                     updateDownloadButtons({
                                       model3dUrl: uploaded.url,
                                       model3dFileName: uploaded.fileName,
@@ -2235,12 +2302,13 @@ export default function AdminDashboard() {
                             {downloadButtons.model3dUrl ? (
                               <button
                                 type="button"
-                                onClick={() =>
+                                onClick={async () => {
+                                  if (!(await deleteManagedMedia(downloadButtons.model3dUrl || ""))) return;
                                   updateDownloadButtons({
                                     model3dUrl: "",
                                     model3dFileName: "",
-                                  })
-                                }
+                                  });
+                                }}
                                 className="rounded-lg border border-red-200 px-3 py-1.5 text-xs font-medium text-red-600 hover:bg-red-50"
                               >
                                 Remove file
@@ -2344,7 +2412,7 @@ export default function AdminDashboard() {
                                   if (!file) return;
                                   setUploadingProductGalleryKey(uploadKey);
                                   try {
-                                    const url = await uploadImage(file);
+                                    const url = await uploadImage(file, image.src);
                                     const next = [...gallery];
                                     next[gi] = { ...next[gi], src: url };
                                     updateGallery(next);
@@ -2359,7 +2427,10 @@ export default function AdminDashboard() {
                             </label>
                             <button
                               type="button"
-                              onClick={() => updateGallery(gallery.filter((_, idx) => idx !== gi))}
+                              onClick={async () => {
+                                if (image.src && !(await deleteManagedMedia(image.src))) return;
+                                updateGallery(gallery.filter((_, idx) => idx !== gi));
+                              }}
                               className="rounded-lg border border-red-200 px-3 py-1.5 text-xs font-medium text-red-600 hover:bg-red-50"
                             >
                               Remove
@@ -2437,7 +2508,7 @@ export default function AdminDashboard() {
                     if (!file) return;
                     setUploadingAboutHeroImage(true);
                     try {
-                      const url = await uploadImage(file);
+                      const url = await uploadImage(file, backgroundImage);
                       updateField("about", "backgroundImage", url);
                       await saveContentSection("about");
                       setSaved(true);
@@ -2456,6 +2527,7 @@ export default function AdminDashboard() {
                   type="button"
                   disabled={uploadingAboutHeroImage}
                   onClick={async () => {
+                    if (!(await deleteManagedMedia(backgroundImage))) return;
                     updateField("about", "backgroundImage", "");
                     try {
                       await saveContentSection("about");
@@ -2569,7 +2641,7 @@ export default function AdminDashboard() {
                     if (!file) return;
                     setUploadingJourneyBg(true);
                     try {
-                      const url = await uploadImage(file);
+                      const url = await uploadImage(file, backgroundImage);
                       updateJourneyTimeline("backgroundImage", url);
                       await saveContentSection("aboutPage");
                       setSaved(true);
@@ -2588,6 +2660,7 @@ export default function AdminDashboard() {
                   type="button"
                   disabled={uploadingJourneyBg}
                   onClick={async () => {
+                    if (!(await deleteManagedMedia(backgroundImage))) return;
                     updateJourneyTimeline("backgroundImage", "");
                     try {
                       await saveContentSection("aboutPage");
@@ -2856,7 +2929,10 @@ export default function AdminDashboard() {
                       className="flex-1 rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm text-[#1a1a1a] outline-none focus:border-[var(--primary-orange)]"
                     />
                     <button
-                      onClick={() => updateMembers(members.filter((_, idx) => idx !== i))}
+                      onClick={async () => {
+                        if (member.photo) await deleteManagedMedia(member.photo, { alertOnError: false });
+                        updateMembers(members.filter((_, idx) => idx !== i));
+                      }}
                       className="rounded-lg border border-red-200 px-3 py-1.5 text-xs font-medium text-red-600 hover:bg-red-50"
                     >
                       Remove
@@ -2877,7 +2953,7 @@ export default function AdminDashboard() {
                           if (!file) return;
                           setUploadingTeamMemberIndex(i);
                           try {
-                            const url = await uploadImage(file);
+                            const url = await uploadImage(file, member.photo);
                             const next = [...members];
                             next[i] = { ...next[i], photo: url };
                             updateMembers(next);
@@ -2898,6 +2974,7 @@ export default function AdminDashboard() {
                         type="button"
                         disabled={uploadingTeamMemberIndex === i}
                         onClick={async () => {
+                          if (member.photo && !(await deleteManagedMedia(member.photo))) return;
                           const next = [...members];
                           next[i] = { ...next[i], photo: "" };
                           updateMembers(next);
@@ -3031,7 +3108,12 @@ export default function AdminDashboard() {
                   className="flex-1 rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm text-[#1a1a1a] outline-none focus:border-[var(--primary-orange)]" 
                 />
                 <button 
-                  onClick={() => updateStats(stats.filter((_, idx) => idx !== i))} 
+                  onClick={async () => {
+                    if (stat.backgroundImage) {
+                      await deleteManagedMedia(stat.backgroundImage, { alertOnError: false });
+                    }
+                    updateStats(stats.filter((_, idx) => idx !== i));
+                  }} 
                   className="rounded-lg border border-red-200 px-3 py-1.5 text-xs font-medium text-red-600 hover:bg-red-50"
                 >Remove</button>
               </div>
@@ -3074,7 +3156,7 @@ export default function AdminDashboard() {
                         if (!file) return;
                         setUploadingStatIndex(i);
                         try {
-                          const url = await uploadImage(file);
+                          const url = await uploadImage(file, stat.backgroundImage);
                           const next = [...stats];
                           next[i] = { ...next[i], backgroundImage: url };
                           updateStats(next);
@@ -3095,6 +3177,7 @@ export default function AdminDashboard() {
                       type="button"
                       disabled={uploadingStatIndex === i}
                       onClick={async () => {
+                        if (stat.backgroundImage && !(await deleteManagedMedia(stat.backgroundImage))) return;
                         const next = [...stats];
                         next[i] = { ...next[i], backgroundImage: "" };
                         updateStats(next);
@@ -3182,7 +3265,7 @@ export default function AdminDashboard() {
                     if (!file) return;
                     setUploadingRequirementBg(true);
                     try {
-                      const url = await uploadImage(file);
+                      const url = await uploadImage(file, backgroundImage);
                       updateRequirement("backgroundImage", url);
                       await saveContentSection("aboutPage");
                       setSaved(true);
@@ -3201,6 +3284,7 @@ export default function AdminDashboard() {
                   type="button"
                   disabled={uploadingRequirementBg}
                   onClick={async () => {
+                    if (!(await deleteManagedMedia(backgroundImage))) return;
                     updateRequirement("backgroundImage", "");
                     try {
                       await saveContentSection("aboutPage");
@@ -3267,7 +3351,7 @@ export default function AdminDashboard() {
                     if (!file) return;
                     setUploadingProjectsHeroImage(true);
                     try {
-                      const url = await uploadImage(file);
+                      const url = await uploadImage(file, backgroundImage);
                       setContent((prev) => ({
                         ...prev,
                         projectsPage: {
@@ -3295,6 +3379,7 @@ export default function AdminDashboard() {
                   type="button"
                   disabled={uploadingProjectsHeroImage}
                   onClick={async () => {
+                    if (!(await deleteManagedMedia(backgroundImage))) return;
                     setContent((prev) => ({
                       ...prev,
                       projectsPage: {
@@ -3435,7 +3520,7 @@ export default function AdminDashboard() {
                     if (!file) return;
                     setUploadingContactHeroImage(true);
                     try {
-                      const url = await uploadImage(file);
+                      const url = await uploadImage(file, backgroundImage);
                       updateField("contactPage", "backgroundImage", url);
                       await saveContentSection("contactPage");
                       setSaved(true);
@@ -3454,6 +3539,7 @@ export default function AdminDashboard() {
                   type="button"
                   disabled={uploadingContactHeroImage}
                   onClick={async () => {
+                    if (!(await deleteManagedMedia(backgroundImage))) return;
                     updateField("contactPage", "backgroundImage", "");
                     try {
                       await saveContentSection("contactPage");
@@ -3547,6 +3633,9 @@ export default function AdminDashboard() {
                   <button
                     type="button"
                     onClick={async () => {
+                      if (plant.image) {
+                        await deleteManagedMedia(plant.image, { alertOnError: false });
+                      }
                       const next = plants.filter((_, idx) => idx !== i);
                       try {
                         await savePlants(next);
@@ -3645,7 +3734,7 @@ export default function AdminDashboard() {
                           if (!file) return;
                           setUploadingPlantIndex(i);
                           try {
-                            const url = await uploadImage(file);
+                            const url = await uploadImage(file, plant.image);
                             const next = [...plants];
                             next[i] = { ...next[i], image: url };
                             await savePlants(next);
@@ -3663,6 +3752,7 @@ export default function AdminDashboard() {
                         type="button"
                         disabled={uploadingPlantIndex === i}
                         onClick={async () => {
+                          if (plant.image && !(await deleteManagedMedia(plant.image))) return;
                           const next = [...plants];
                           next[i] = { ...next[i], image: "" };
                           try {
@@ -4198,7 +4288,7 @@ export default function AdminDashboard() {
                     if (!file) return;
                     setUploadingCareersHeroImage(true);
                     try {
-                      const url = await uploadImage(file);
+                      const url = await uploadImage(file, heroImage);
                       updateNestedField("careersPage", ["hero", "image"], url);
                       await saveContentSection("careersPage");
                       setSaved(true);
@@ -4217,6 +4307,7 @@ export default function AdminDashboard() {
                   type="button"
                   disabled={uploadingCareersHeroImage}
                   onClick={async () => {
+                    if (!(await deleteManagedMedia(heroImage))) return;
                     updateNestedField("careersPage", ["hero", "image"], "");
                     try {
                       await saveContentSection("careersPage");
@@ -4389,7 +4480,10 @@ export default function AdminDashboard() {
                   />
                   <button
                     type="button"
-                    onClick={() => updateImages(images.filter((_, idx) => idx !== i))}
+                    onClick={async () => {
+                      if (image.src) await deleteManagedMedia(image.src, { alertOnError: false });
+                      updateImages(images.filter((_, idx) => idx !== i));
+                    }}
                     className="rounded-lg border border-red-200 px-3 py-1.5 text-xs font-medium text-red-600 hover:bg-red-50"
                   >
                     Remove
@@ -4410,7 +4504,7 @@ export default function AdminDashboard() {
                         if (!file) return;
                         setUploadingCareersGalleryIndex(i);
                         try {
-                          const url = await uploadImage(file);
+                          const url = await uploadImage(file, image.src);
                           const next = [...images];
                           next[i] = { ...next[i], src: url };
                           updateImages(next);
@@ -4431,6 +4525,7 @@ export default function AdminDashboard() {
                       type="button"
                       disabled={uploadingCareersGalleryIndex === i}
                       onClick={async () => {
+                        if (image.src && !(await deleteManagedMedia(image.src))) return;
                         const next = [...images];
                         next[i] = { ...next[i], src: "" };
                         updateImages(next);
