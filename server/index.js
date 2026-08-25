@@ -158,6 +158,11 @@ app.get('/api/health', (req, res) => {
           process.env.CLOUDINARY_API_KEY &&
           process.env.CLOUDINARY_API_SECRET
       ),
+      imagekit: Boolean(
+        process.env.IMAGEKIT_PUBLIC_KEY &&
+          process.env.IMAGEKIT_PRIVATE_KEY &&
+          process.env.IMAGEKIT_URL_ENDPOINT
+      ),
     },
   });
 });

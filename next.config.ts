@@ -16,6 +16,15 @@ try {
 }
 
 const cloudName = process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME;
+const imagekitEndpointHost = (() => {
+  try {
+    return process.env.NEXT_PUBLIC_IMAGEKIT_URL_ENDPOINT
+      ? new URL(process.env.NEXT_PUBLIC_IMAGEKIT_URL_ENDPOINT).hostname
+      : "ik.imagekit.io";
+  } catch {
+    return "ik.imagekit.io";
+  }
+})();
 
 const uploadRemotePatterns: NonNullable<NextConfig["images"]>["remotePatterns"] =
   uploadHost !== "localhost"
@@ -36,6 +45,14 @@ const cloudinaryRemotePatterns: NonNullable<NextConfig["images"]>["remotePattern
     protocol: "https",
     hostname: "res.cloudinary.com",
     pathname: cloudName ? `/${cloudName}/**` : "/**",
+  },
+];
+
+const imagekitRemotePatterns: NonNullable<NextConfig["images"]>["remotePatterns"] = [
+  {
+    protocol: "https",
+    hostname: imagekitEndpointHost,
+    pathname: "/**",
   },
 ];
 
@@ -71,10 +88,10 @@ const nextConfig: NextConfig = {
               "default-src 'self'",
               "script-src 'self' 'unsafe-inline' 'unsafe-eval'",
               "style-src 'self' 'unsafe-inline'",
-              `img-src 'self' data: blob: ${apiOrigin} https://res.cloudinary.com https://maps.google.com https://maps.googleapis.com https://*.google.com https://*.gstatic.com`,
+              `img-src 'self' data: blob: ${apiOrigin} https://res.cloudinary.com https://${imagekitEndpointHost} https://maps.google.com https://maps.googleapis.com https://*.google.com https://*.gstatic.com`,
               "font-src 'self' data:",
               `connect-src 'self' ${apiOrigin}`,
-              "media-src 'self' blob: data: https://res.cloudinary.com",
+              `media-src 'self' blob: data: https://res.cloudinary.com https://${imagekitEndpointHost}`,
               "frame-src 'self' https://maps.google.com https://www.google.com https://*.google.com",
               "frame-ancestors 'none'",
               "base-uri 'self'",
@@ -95,6 +112,7 @@ const nextConfig: NextConfig = {
       },
       ...uploadRemotePatterns,
       ...cloudinaryRemotePatterns,
+      ...imagekitRemotePatterns,
     ],
   },
 };

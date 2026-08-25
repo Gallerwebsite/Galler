@@ -55,12 +55,20 @@ function DepartmentIcon({ type }: { type: Department["icon"] }) {
   );
 }
 
+function gridColsClass(count: number) {
+  if (count <= 1) return "sm:grid-cols-1";
+  if (count === 2) return "sm:grid-cols-2";
+  return "sm:grid-cols-3";
+}
+
 export default function ContactDepartments({
   departments = DEFAULT_DEPARTMENTS,
 }: ContactDepartmentsProps) {
   return (
     <section className="border-t border-[#e5e5e5] bg-white py-14 sm:py-16">
-      <div className="mx-auto grid max-w-7xl grid-cols-1 gap-10 px-6 sm:grid-cols-3 sm:gap-0 lg:px-10">
+      <div
+        className={`mx-auto grid max-w-7xl grid-cols-1 gap-10 px-6 sm:gap-0 lg:px-10 ${gridColsClass(departments.length)}`}
+      >
         {departments.map((dept, index) => (
           <motion.div
             key={dept.title}

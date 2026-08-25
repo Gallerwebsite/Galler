@@ -802,7 +802,7 @@ export default function AdminDashboard() {
   };
 
   const deleteHeroVideo = async (url: string): Promise<boolean> => {
-    if (url.startsWith("/uploads/") || url.startsWith("https://res.cloudinary.com/")) {
+    if (url.startsWith("/uploads/") || url.startsWith("https://res.cloudinary.com/") || url.includes("ik.imagekit.io")) {
       const res = await adminFetch("/api/upload", {
         method: "DELETE",
         headers: {

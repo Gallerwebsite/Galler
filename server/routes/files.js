@@ -1,7 +1,7 @@
 const express = require('express');
 const fs = require('fs');
 const path = require('path');
-const cloudinaryUtil = require('../utils/cloudinary');
+const mediaStorage = require('../utils/mediaStorage');
 
 const router = express.Router();
 
@@ -49,7 +49,13 @@ function isAllowedDownloadUrl(url) {
     return Boolean(filename) && !filename.includes('..');
   }
 
-  if (!cloudinaryUtil.isCloudinaryUrl(url)) return false;
+  if (mediaStorage.isImageKitUrl(url)) {
+    const endpoint = (process.env.IMAGEKIT_URL_ENDPOINT || '').replace(/\/$/, '');
+    if (endpoint && url.startsWith(endpoint)) return true;
+    return url.includes('ik.imagekit.io');
+  }
+
+  if (!mediaStorage.isCloudinaryUrl(url)) return false;
 
   const cloudName = process.env.CLOUDINARY_CLOUD_NAME;
   if (cloudName && !url.includes(`res.cloudinary.com/${cloudName}/`)) {
@@ -87,7 +93,7 @@ router.get('/download', async (req, res) => {
     if (url.startsWith('/uploads/')) {
       fileBuffer = await readLocalUpload(url);
     } else {
-      const fetched = await cloudinaryUtil.fetchCloudinaryFile(url, resolvedFileName);
+      const fetched = await mediaStorage.fetchManagedFile(url, resolvedFileName);
       fileBuffer = fetched.buffer;
       resolvedUrl = fetched.resolvedUrl;
     }

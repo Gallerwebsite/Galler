@@ -11,3 +11,4 @@ data/newsletter-subscribers.json
 data/newsletter-campaigns.json
 private/resumes/*
 !private/resumes/.gitkeep
+scripts/imagekit-url-map.json
