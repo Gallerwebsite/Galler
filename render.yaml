@@ -12,9 +12,15 @@ services:
         sync: false
       - key: MONGODB_URI
         sync: false
-      - key: CLOUDINARY_CLOUD_NAME
+      - key: IMAGEKIT_PUBLIC_KEY
         sync: false
-      - key: CLOUDINARY_API_KEY
+      - key: IMAGEKIT_PRIVATE_KEY
         sync: false
-      - key: CLOUDINARY_API_SECRET
+      - key: IMAGEKIT_URL_ENDPOINT
+        sync: false
+      - key: RESEND_API_KEY
+        sync: false
+      - key: CONTACT_NOTIFY_EMAIL
+        sync: false
+      - key: RESEND_FROM_EMAIL
         sync: false
