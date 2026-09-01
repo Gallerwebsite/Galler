@@ -3,6 +3,7 @@ const crypto = require('crypto');
 const { body, validationResult } = require('express-validator');
 const { Resend } = require('resend');
 const { readJSON, writeJSON } = require('../utils/dataStore');
+const { getFromEmail, escapeHtml, textToHtml } = require('../utils/email');
 const authMiddleware = require('../middleware/auth');
 
 const router = express.Router();
@@ -30,32 +31,12 @@ function normalizeEmail(email) {
   return email.trim().toLowerCase();
 }
 
-function getFromEmail() {
-  return (
-    process.env.NEWSLETTER_FROM_EMAIL ||
-    process.env.CONTACT_FROM_EMAIL ||
-    'Galler Website <onboarding@resend.dev>'
-  );
-}
-
 function getFrontendUrl() {
   return (process.env.FRONTEND_URL || 'http://localhost:3000').replace(/\/$/, '');
 }
 
 function buildUnsubscribeUrl(token) {
   return `${getFrontendUrl()}/unsubscribe?token=${encodeURIComponent(token)}`;
-}
-
-function escapeHtml(text) {
-  return text
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;');
-}
-
-function textToHtml(text) {
-  return escapeHtml(text).replace(/\n/g, '<br />');
 }
 
 function buildNewsletterHtml({ subject, body, unsubscribeUrl }) {

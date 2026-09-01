@@ -5,6 +5,7 @@ import { motion } from "framer-motion";
 import aboutImage from "@/Assets/about.jpg";
 import CountUpNumber from "@/app/components/common/CountUpNumber";
 import type { SiteContent } from "@/app/lib/getContent";
+import { API_URL } from "@/app/lib/apiUrl";
 import { resolveUploadSrc } from "@/app/lib/resolveUploadSrc";
 import { TextAnimate } from "@/registry/magicui/text-animate";
 import LogoMarquee from "../home/LogoMarquee";
@@ -45,20 +46,50 @@ export default function AboutAchievementsContact({
 }: AboutAchievementsContactProps) {
   const [form, setForm] = useState({ fullName: "", email: "", phone: "" });
   const [submitted, setSubmitted] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+  const [error, setError] = useState("");
 
   const handleFullNameChange = (value: string) => {
-    setForm((prev) => ({ ...prev, fullName: value.replace(/[^a-zA-Z]/g, "") }));
+    setForm((prev) => ({ ...prev, fullName: value.replace(/[^a-zA-Z\s]/g, "") }));
   };
 
   const handlePhoneChange = (value: string) => {
     setForm((prev) => ({ ...prev, phone: value.replace(/[^0-9]/g, "") }));
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setSubmitted(true);
-    setForm({ fullName: "", email: "", phone: "" });
-    setTimeout(() => setSubmitted(false), 3000);
+    setSubmitting(true);
+    setError("");
+
+    try {
+      const res = await fetch(`${API_URL}/api/contact`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          fullName: form.fullName,
+          email: form.email,
+          phone: form.phone,
+          subject: "Requirement inquiry (About page)",
+          message: "Submitted from the About page requirement form.",
+        }),
+      });
+
+      const data = await res.json().catch(() => ({}));
+
+      if (!res.ok) {
+        setError(typeof data.message === "string" ? data.message : "Something went wrong. Please try again.");
+        return;
+      }
+
+      setSubmitted(true);
+      setForm({ fullName: "", email: "", phone: "" });
+      setTimeout(() => setSubmitted(false), 3000);
+    } catch {
+      setError("Could not reach the server. Please try again.");
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   return (
@@ -220,11 +251,15 @@ export default function AboutAchievementsContact({
                 viewport={viewport}
                 transition={{ duration: 0.55, ease: entryEase, delay: 0.35 }}
               >
+                {error ? (
+                  <p className="mt-4 font-century text-sm text-red-200">{error}</p>
+                ) : null}
                 <button
                   type="submit"
-                  className="mt-4 border border-white px-10 py-2.5 font-century text-[15px] font-medium text-white transition-colors hover:bg-white hover:text-[#1a3050]"
+                  disabled={submitting}
+                  className="mt-4 border border-white px-10 py-2.5 font-century text-[15px] font-medium text-white transition-colors hover:bg-white hover:text-[#1a3050] disabled:cursor-not-allowed disabled:opacity-60"
                 >
-                  {submitted ? "SENT" : submitText}
+                  {submitting ? "SENDING…" : submitted ? "SENT" : submitText}
                 </button>
               </motion.div>
             </form>

@@ -5,6 +5,7 @@ const path = require('path');
 const multer = require('multer');
 const { readJSON, writeJSON } = require('../utils/dataStore');
 const mediaStorage = require('../utils/mediaStorage');
+const { escapeHtml, textToHtml, sendNotificationEmail } = require('../utils/email');
 const authMiddleware = require('../middleware/auth');
 
 const router = express.Router();
@@ -215,6 +216,47 @@ function handleResumeUpload(req, res, onSuccess) {
   });
 }
 
+function buildResumeEmailHtml(submission) {
+  const resumeLine = submission.resumeUrl
+    ? `<p><strong>Resume:</strong> <a href="${escapeHtml(submission.resumeUrl)}">${escapeHtml(submission.resumeOriginalName || 'Download')}</a></p>`
+    : `<p><strong>Resume:</strong> ${escapeHtml(submission.resumeOriginalName || 'Attached in admin')}</p>`;
+
+  return `
+    <h2>New general resume submission</h2>
+    <p><strong>Name:</strong> ${escapeHtml(submission.fullName)}</p>
+    <p><strong>Email:</strong> <a href="mailto:${escapeHtml(submission.email)}">${escapeHtml(submission.email)}</a></p>
+    <p><strong>Phone:</strong> ${escapeHtml(submission.phone || '—')}</p>
+    ${submission.message ? `<p><strong>Message:</strong></p><p>${textToHtml(submission.message)}</p>` : ''}
+    ${resumeLine}
+  `;
+}
+
+function buildApplicationEmailHtml(application) {
+  const resumeLine = application.resumeUrl
+    ? `<p><strong>Resume:</strong> <a href="${escapeHtml(application.resumeUrl)}">${escapeHtml(application.resumeOriginalName || 'Download')}</a></p>`
+    : `<p><strong>Resume:</strong> ${escapeHtml(application.resumeOriginalName || 'Attached in admin')}</p>`;
+
+  return `
+    <h2>New job application</h2>
+    <p><strong>Job:</strong> ${escapeHtml(application.jobTitle)}</p>
+    <p><strong>Location:</strong> ${escapeHtml(application.jobLocation || '—')}</p>
+    <p><strong>Type:</strong> ${escapeHtml(application.jobType || '—')}</p>
+    <p><strong>Name:</strong> ${escapeHtml(application.fullName)}</p>
+    <p><strong>Email:</strong> <a href="mailto:${escapeHtml(application.email)}">${escapeHtml(application.email)}</a></p>
+    <p><strong>Phone:</strong> ${escapeHtml(application.phone || '—')}</p>
+    ${resumeLine}
+  `;
+}
+
+async function notifyCareerSubmission({ subject, html, replyTo, record, saveRecord }) {
+  const emailResult = await sendNotificationEmail({ subject, html, replyTo });
+  if (emailResult.sent) {
+    record.emailSent = true;
+    await saveRecord(record);
+  }
+  return emailResult.sent;
+}
+
 async function sendResumeDownload(res, submission) {
   if (submission.resumeUrl) {
     return res.redirect(submission.resumeUrl);
@@ -294,6 +336,7 @@ router.post('/resume', (req, res) => {
       message,
       ...resumeFields,
       read: false,
+      emailSent: false,
       createdAt: new Date().toISOString(),
     };
 
@@ -301,9 +344,23 @@ router.post('/resume', (req, res) => {
     submissions.unshift(submission);
     await saveGeneralSubmissions(submissions);
 
+    const emailSent = await notifyCareerSubmission({
+      subject: `[Galler Careers] Resume submission — ${fullName}`,
+      html: buildResumeEmailHtml(submission),
+      replyTo: email,
+      record: submission,
+      saveRecord: async (updated) => {
+        submissions[0] = updated;
+        await saveGeneralSubmissions(submissions);
+      },
+    });
+
     return res.status(201).json({
-      message: 'Your resume was submitted successfully.',
+      message: emailSent
+        ? 'Your resume was submitted successfully.'
+        : 'Your resume was submitted successfully. Email notification could not be sent.',
       id: submission.id,
+      emailSent,
     });
   });
 });
@@ -332,6 +389,7 @@ router.post('/apply', (req, res) => {
       phone,
       ...resumeFields,
       read: false,
+      emailSent: false,
       createdAt: new Date().toISOString(),
     };
 
@@ -339,9 +397,23 @@ router.post('/apply', (req, res) => {
     applications.unshift(application);
     await saveJobApplications(applications);
 
+    const emailSent = await notifyCareerSubmission({
+      subject: `[Galler Careers] Application — ${job.title} — ${fullName}`,
+      html: buildApplicationEmailHtml(application),
+      replyTo: email,
+      record: application,
+      saveRecord: async (updated) => {
+        applications[0] = updated;
+        await saveJobApplications(applications);
+      },
+    });
+
     return res.status(201).json({
-      message: 'Your application was submitted successfully.',
+      message: emailSent
+        ? 'Your application was submitted successfully.'
+        : 'Your application was submitted successfully. Email notification could not be sent.',
       id: application.id,
+      emailSent,
     });
   });
 });

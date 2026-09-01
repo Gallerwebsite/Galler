@@ -1,8 +1,8 @@
 const express = require('express');
 const crypto = require('crypto');
 const { body, validationResult } = require('express-validator');
-const { Resend } = require('resend');
 const { readJSON, writeJSON } = require('../utils/dataStore');
+const { escapeHtml, textToHtml, sendNotificationEmail } = require('../utils/email');
 const authMiddleware = require('../middleware/auth');
 
 const router = express.Router();
@@ -18,14 +18,14 @@ async function saveSubmissions(data) {
 function buildEmailHtml({ fullName, companyName, email, phone, subject, details }) {
   return `
     <h2>New start-a-project inquiry</h2>
-    <p><strong>Name:</strong> ${fullName}</p>
-    <p><strong>Company:</strong> ${companyName}</p>
-    <p><strong>Email:</strong> <a href="mailto:${email}">${email}</a></p>
-    <p><strong>Phone:</strong> ${phone || '—'}</p>
-    <p><strong>Subject:</strong> ${subject}</p>
+    <p><strong>Name:</strong> ${escapeHtml(fullName)}</p>
+    <p><strong>Company:</strong> ${escapeHtml(companyName)}</p>
+    <p><strong>Email:</strong> <a href="mailto:${escapeHtml(email)}">${escapeHtml(email)}</a></p>
+    <p><strong>Phone:</strong> ${escapeHtml(phone || '—')}</p>
+    <p><strong>Subject:</strong> ${escapeHtml(subject)}</p>
     <hr />
     <p><strong>Details:</strong></p>
-    <p>${details.replace(/\n/g, '<br />')}</p>
+    <p>${textToHtml(details)}</p>
   `;
 }
 
@@ -64,58 +64,32 @@ router.post(
     submissions.unshift(submission);
     await saveSubmissions(submissions);
 
-    const apiKey = process.env.RESEND_API_KEY;
-    const toEmail = process.env.CONTACT_TO_EMAIL;
-    const fromEmail = process.env.CONTACT_FROM_EMAIL || 'Galler Website <onboarding@resend.dev>';
+    const emailResult = await sendNotificationEmail({
+      replyTo: email,
+      subject: `[Galler Start Project] ${subject} — ${fullName}`,
+      html: buildEmailHtml(submission),
+    });
 
-    if (!apiKey || !toEmail) {
+    if (!emailResult.sent) {
       return res.status(201).json({
-        message: 'Your inquiry was received.',
+        message:
+          emailResult.reason === 'not_configured'
+            ? 'Your inquiry was received.'
+            : 'Your inquiry was received. Email notification could not be sent.',
         id: submission.id,
         emailSent: false,
       });
     }
 
-    try {
-      const resend = new Resend(apiKey);
-      const result = await resend.emails.send({
-        from: fromEmail,
-        to: [toEmail],
-        replyTo: email,
-        subject: `[Galler Start Project] ${subject} — ${fullName}`,
-        html: buildEmailHtml(submission),
-      });
+    submission.emailSent = true;
+    submissions[0] = submission;
+    await saveSubmissions(submissions);
 
-      if (result.error) {
-        if (process.env.NODE_ENV !== 'production') {
-          console.error('Resend error:', result.error.message || result.error);
-        }
-        return res.status(201).json({
-          message: 'Your inquiry was received. Email notification could not be sent.',
-          id: submission.id,
-          emailSent: false,
-        });
-      }
-
-      submission.emailSent = true;
-      submissions[0] = submission;
-      await saveSubmissions(submissions);
-
-      return res.status(201).json({
-        message: 'Your inquiry was sent successfully.',
-        id: submission.id,
-        emailSent: true,
-      });
-    } catch (err) {
-      if (process.env.NODE_ENV !== 'production') {
-        console.error('Resend error:', err?.message || err);
-      }
-      return res.status(201).json({
-        message: 'Your inquiry was received. We could not send the email notification.',
-        id: submission.id,
-        emailSent: false,
-      });
-    }
+    return res.status(201).json({
+      message: 'Your inquiry was sent successfully.',
+      id: submission.id,
+      emailSent: true,
+    });
   }
 );
 
