@@ -15,7 +15,6 @@ try {
   // keep localhost defaults
 }
 
-const cloudName = process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME;
 const imagekitEndpointHost = (() => {
   try {
     return process.env.NEXT_PUBLIC_IMAGEKIT_URL_ENDPOINT
@@ -39,14 +38,6 @@ const uploadRemotePatterns: NonNullable<NextConfig["images"]>["remotePatterns"] 
         },
       ]
     : [];
-
-const cloudinaryRemotePatterns: NonNullable<NextConfig["images"]>["remotePatterns"] = [
-  {
-    protocol: "https",
-    hostname: "res.cloudinary.com",
-    pathname: cloudName ? `/${cloudName}/**` : "/**",
-  },
-];
 
 const imagekitRemotePatterns: NonNullable<NextConfig["images"]>["remotePatterns"] = [
   {
@@ -88,10 +79,10 @@ const nextConfig: NextConfig = {
               "default-src 'self'",
               "script-src 'self' 'unsafe-inline' 'unsafe-eval'",
               "style-src 'self' 'unsafe-inline'",
-              `img-src 'self' data: blob: ${apiOrigin} https://res.cloudinary.com https://${imagekitEndpointHost} https://maps.google.com https://maps.googleapis.com https://*.google.com https://*.gstatic.com`,
+              `img-src 'self' data: blob: ${apiOrigin} https://${imagekitEndpointHost} https://maps.google.com https://maps.googleapis.com https://*.google.com https://*.gstatic.com`,
               "font-src 'self' data:",
               `connect-src 'self' ${apiOrigin}`,
-              `media-src 'self' blob: data: https://res.cloudinary.com https://${imagekitEndpointHost}`,
+              `media-src 'self' blob: data: https://${imagekitEndpointHost}`,
               "frame-src 'self' https://maps.google.com https://www.google.com https://*.google.com",
               "frame-ancestors 'none'",
               "base-uri 'self'",
@@ -111,7 +102,6 @@ const nextConfig: NextConfig = {
         pathname: "/uploads/**",
       },
       ...uploadRemotePatterns,
-      ...cloudinaryRemotePatterns,
       ...imagekitRemotePatterns,
     ],
   },

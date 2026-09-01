@@ -739,11 +739,9 @@ export default function AdminDashboard() {
 
   const isManagedMediaUrl = (url: string) =>
     Boolean(url) &&
-    (url.startsWith("/uploads/") ||
-      url.startsWith("https://res.cloudinary.com/") ||
-      url.includes("ik.imagekit.io"));
+    (url.startsWith("/uploads/") || url.includes("ik.imagekit.io"));
 
-  /** Deletes a file from ImageKit/Cloudinary/local uploads. Returns false only on hard failure. */
+  /** Deletes a file from ImageKit or local uploads. Returns false only on hard failure. */
   const deleteManagedMedia = async (
     url: string,
     options: { alertOnError?: boolean } = {}

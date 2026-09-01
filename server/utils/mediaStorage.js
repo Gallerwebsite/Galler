@@ -1,14 +1,12 @@
 /**
  * Media storage facade.
- * Prefer ImageKit when configured; fall back to Cloudinary, then local disk.
+ * Prefer ImageKit when configured; otherwise local disk.
  */
 const path = require('path');
-const cloudinaryUtil = require('./cloudinary');
 const imagekitUtil = require('./imagekit');
 
 function provider() {
   if (imagekitUtil.isConfigured()) return 'imagekit';
-  if (cloudinaryUtil.isConfigured()) return 'cloudinary';
   return 'local';
 }
 
@@ -17,35 +15,32 @@ function isConfigured() {
 }
 
 function isManagedUrl(url) {
-  return cloudinaryUtil.isCloudinaryUrl(url) || imagekitUtil.isImageKitUrl(url);
+  return imagekitUtil.isImageKitUrl(url);
 }
 
 async function uploadMedia(buffer, originalName, options = {}) {
-  if (provider() === 'imagekit') {
-    return imagekitUtil.uploadMedia(buffer, originalName, options);
+  if (!isConfigured()) {
+    throw new Error('ImageKit is not configured');
   }
-  return cloudinaryUtil.uploadMedia(buffer, originalName, options);
+  return imagekitUtil.uploadMedia(buffer, originalName, options);
 }
 
 async function uploadFromPath(filePath, originalName, options = {}) {
-  if (provider() === 'imagekit') {
-    return imagekitUtil.uploadFromPath(filePath, originalName, options);
+  if (!isConfigured()) {
+    throw new Error('ImageKit is not configured');
   }
-  return cloudinaryUtil.uploadFromPath(filePath, originalName, options);
+  return imagekitUtil.uploadFromPath(filePath, originalName, options);
 }
 
 async function uploadResume(buffer, originalName) {
-  if (provider() === 'imagekit') {
-    return imagekitUtil.uploadResume(buffer, originalName);
+  if (!isConfigured()) {
+    throw new Error('ImageKit is not configured');
   }
-  return cloudinaryUtil.uploadResume(buffer, originalName);
+  return imagekitUtil.uploadResume(buffer, originalName);
 }
 
 async function removeLocalFile(filePath) {
-  if (provider() === 'imagekit') {
-    return imagekitUtil.removeLocalFile(filePath);
-  }
-  return cloudinaryUtil.removeLocalFile(filePath);
+  return imagekitUtil.removeLocalFile(filePath);
 }
 
 async function deleteByUrl(url) {
@@ -55,18 +50,12 @@ async function deleteByUrl(url) {
     }
     return imagekitUtil.deleteByUrl(url);
   }
-  if (cloudinaryUtil.isCloudinaryUrl(url)) {
-    return cloudinaryUtil.deleteByUrl(url);
-  }
   return false;
 }
 
-async function fetchManagedFile(url, fileName = '') {
+async function fetchManagedFile(url) {
   if (imagekitUtil.isImageKitUrl(url)) {
     return imagekitUtil.fetchImageKitFile(url);
-  }
-  if (cloudinaryUtil.isCloudinaryUrl(url)) {
-    return cloudinaryUtil.fetchCloudinaryFile(url, fileName);
   }
   throw new Error('Unsupported media URL');
 }
@@ -79,7 +68,6 @@ module.exports = {
   provider,
   isConfigured,
   isManagedUrl,
-  isCloudinaryUrl: cloudinaryUtil.isCloudinaryUrl,
   isImageKitUrl: imagekitUtil.isImageKitUrl,
   isLocalUploadPath,
   uploadMedia,
