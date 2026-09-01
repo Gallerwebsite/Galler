@@ -29,7 +29,7 @@ Almost all public copy and media is **CMS-driven** via an Express API (`GET /api
 | Icons | `react-icons` |
 | Backend / CMS | Express, Mongoose, JWT, bcrypt, Helmet, CORS, rate limiting |
 | Database | MongoDB (with JSON fallbacks) |
-| Media | Cloudinary + local `/uploads` |
+| Media | ImageKit + local `/uploads` |
 | Email | Resend |
 | Auth | Cookie JWT (`galler_admin_token`), Next.js middleware on `/admin/*` |
 | Maps | Google Maps embeds |
@@ -356,7 +356,7 @@ Middleware requires auth cookie for `/admin/*` except login. Admin layout is noi
 - [x] Client logo marquee
 - [x] Product image/video gallery + zoom
 - [x] Brochure / 3D model / video downloads
-- [x] Cloudinary + local uploads
+- [x] ImageKit + local uploads
 
 ### UX / motion
 

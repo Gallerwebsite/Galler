@@ -153,11 +153,6 @@ app.get('/api/health', (req, res) => {
     timestamp: new Date().toISOString(),
     storage: {
       mongodb: Boolean(process.env.MONGODB_URI),
-      cloudinary: Boolean(
-        process.env.CLOUDINARY_CLOUD_NAME &&
-          process.env.CLOUDINARY_API_KEY &&
-          process.env.CLOUDINARY_API_SECRET
-      ),
       imagekit: Boolean(
         process.env.IMAGEKIT_PUBLIC_KEY &&
           process.env.IMAGEKIT_PRIVATE_KEY &&

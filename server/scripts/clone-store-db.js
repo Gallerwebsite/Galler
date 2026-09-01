@@ -4,7 +4,7 @@
  * Safety:
  * - Never writes to the source URI
  * - Refuses to run if source and target are the same database
- * - Use only for ImageKit comparison (prod stays on Cloudinary URLs)
+ * - Use only to clone production Store data into a separate test database
  *
  * Usage (from server/):
  *   MONGODB_URI_SOURCE="mongodb+srv://.../galler" \

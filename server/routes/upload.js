@@ -6,8 +6,6 @@ const path = require('path');
 const { body, validationResult } = require('express-validator');
 const authMiddleware = require('../middleware/auth');
 const mediaStorage = require('../utils/mediaStorage');
-const cloudinaryUtil = require('../utils/cloudinary');
-const imagekitUtil = require('../utils/imagekit');
 
 const router = express.Router();
 
@@ -193,8 +191,7 @@ router.delete(
       .trim()
       .custom((value) => {
         if (value.startsWith('/uploads/')) return true;
-        if (cloudinaryUtil.isCloudinaryUrl(value)) return true;
-        if (imagekitUtil.isImageKitUrl(value)) return true;
+        if (mediaStorage.isImageKitUrl(value)) return true;
         throw new Error('Invalid file URL format');
       }),
   ],
@@ -213,8 +210,7 @@ router.delete(
       if (mediaStorage.isManagedUrl(url)) {
         const deleted = await mediaStorage.deleteByUrl(url);
         console.log(
-          `Media delete ${deleted ? 'ok' : 'skipped'}:`,
-          mediaStorage.isImageKitUrl(url) ? 'imagekit' : 'cloudinary',
+          `Media delete ${deleted ? 'ok' : 'skipped'}: imagekit`,
           url.slice(0, 120)
         );
         return res.json({ message: 'File deleted successfully' });

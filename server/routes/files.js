@@ -55,14 +55,7 @@ function isAllowedDownloadUrl(url) {
     return url.includes('ik.imagekit.io');
   }
 
-  if (!mediaStorage.isCloudinaryUrl(url)) return false;
-
-  const cloudName = process.env.CLOUDINARY_CLOUD_NAME;
-  if (cloudName && !url.includes(`res.cloudinary.com/${cloudName}/`)) {
-    return false;
-  }
-
-  return true;
+  return false;
 }
 
 async function readLocalUpload(relativeUrl) {

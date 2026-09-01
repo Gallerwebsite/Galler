@@ -30,7 +30,7 @@ function escapeHtml(text) {
 }
 
 function textToHtml(text) {
-  return escapeHtml(text).replace(/\n/g, '<br />');
+  return escapeHtml(text).replace(/\r\n|\n|\r/g, '<br />');
 }
 
 async function sendNotificationEmail({ subject, html, replyTo }) {
@@ -44,13 +44,18 @@ async function sendNotificationEmail({ subject, html, replyTo }) {
 
   try {
     const resend = new Resend(apiKey);
-    const result = await resend.emails.send({
+    const payload = {
       from: fromEmail,
       to: [toEmail],
-      replyTo,
       subject,
       html,
-    });
+    };
+    const replyToAddress = typeof replyTo === 'string' ? replyTo.trim() : '';
+    if (replyToAddress) {
+      payload.replyTo = replyToAddress;
+    }
+
+    const result = await resend.emails.send(payload);
 
     if (result.error) {
       if (process.env.NODE_ENV !== 'production') {
