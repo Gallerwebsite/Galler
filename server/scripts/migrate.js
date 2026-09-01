@@ -5,7 +5,7 @@ const path = require('path');
 const { connectDB } = require('../db/connect');
 const { readJSON, writeJSON, exists } = require('../utils/fileStore');
 const Store = require('../models/Store');
-const cloudinaryUtil = require('../utils/cloudinary');
+const mediaStorage = require('../utils/mediaStorage');
 
 const dataDir = path.join(__dirname, '..', 'data');
 const uploadsDir = path.join(__dirname, '..', 'uploads');
@@ -50,9 +50,9 @@ async function migrateJsonToMongo() {
   }
 }
 
-async function migrateUploadsToCloudinary() {
-  if (!cloudinaryUtil.isConfigured()) {
-    console.log('\nSkipping upload migration (Cloudinary not configured).');
+async function migrateUploadsToImageKit() {
+  if (!mediaStorage.isConfigured()) {
+    console.log('\nSkipping upload migration (ImageKit not configured).');
     return;
   }
 
@@ -67,7 +67,7 @@ async function migrateUploadsToCloudinary() {
     return;
   }
 
-  console.log(`\nMigrating ${files.length} upload(s) to Cloudinary...`);
+  console.log(`\nMigrating ${files.length} upload(s) to ImageKit...`);
   const urlMap = {};
 
   for (const filename of files) {
@@ -77,7 +77,7 @@ async function migrateUploadsToCloudinary() {
     const isRaw = ['.pdf', '.doc', '.docx', '.glb', '.gltf', '.obj', '.stl', '.step', '.stp', '.zip'].includes(ext);
 
     try {
-      const result = await cloudinaryUtil.uploadFromPath(filePath, filename, {
+      const result = await mediaStorage.uploadFromPath(filePath, filename, {
         folder: 'galler/uploads',
         resourceType: isVideo ? 'video' : isRaw ? 'raw' : 'image',
       });
@@ -124,7 +124,7 @@ async function main() {
 
   await connectDB();
   await migrateJsonToMongo();
-  await migrateUploadsToCloudinary();
+  await migrateUploadsToImageKit();
   console.log('\nMigration complete.\n');
   process.exit(0);
 }

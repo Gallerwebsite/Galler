@@ -7,13 +7,10 @@
     "start": "node index.js",
     "dev": "node --watch index.js",
     "migrate": "node scripts/migrate.js",
-    "clone-db": "node scripts/clone-store-db.js",
-    "migrate-imagekit": "node scripts/migrate-cloudinary-to-imagekit.js",
-    "rewrite-prod-imagekit": "node scripts/rewrite-prod-imagekit-urls.js"
+    "clone-db": "node scripts/clone-store-db.js"
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",
-    "cloudinary": "^2.10.0",
     "cookie-parser": "^1.4.7",
     "cors": "^2.8.5",
     "dotenv": "^16.4.5",
